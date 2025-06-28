@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Vinculo Usuário-Estabelecimento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col"
+  >
+    <div th:replace="~{Admin/Header :: main-header}"></div>
+    <main
+      class="flex-1 flex items-center justify-center w-full px-4 py-8 md:py-0"
+    >
+      <div
+        class="bg-[#599e4a] rounded-3xl w-full max-w-md shadow-xl shadow-green-950/50 p-4 sm:p-6 md:p-8"
+      >
+        <h1 class="text-2xl font-bold text-black mb-6 text-center">
+          Vínculo do Usuário
+        </h1>
+
+        <form
+          th:action="@{/admin/usuarios/{id}/estabelecimento(id=${usuario.id})}"
+          method="post"
+          class="space-y-6"
+        >
+          <div class="mb-3 text-center">
+            <h3 class="text-lg font-semibold text-black mb-1">Usuário</h3>
+            <span class="text-black" th:text="${usuario.username}"></span>
+
+            <div class="mb-3 text-center">
+              <h3 class="text-lg font-semibold text-black mb-1">Email</h3>
+              <span class="text-black" th:text="${usuario.email}"></span>
+            </div>
+
+            <div class="text-center">
+              <h3 class="text-lg font-semibold text-black mb-1">Cargo Atual</h3>
+              <span
+                class="text-black"
+                th:text="${usuario.cargo ?: 'Sem cargo'}"
+              ></span>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-lg font-semibold text-black mb-2 text-center">
+              Alterar Estabelecimento
+            </h3>
+            <div class="flex justify-center">
+              <select
+                id="estabelecimentoId"
+                name="estabelecimentoId"
+                class="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#297e1d] focus:border-[#297e1d] text-center"
+              >
+                <option
+                  value=""
+                  th:selected="${usuario.estabelecimentoId == null}"
+                >
+                  Sem vínculo
+                </option>
+                <option
+                  th:each="estabelecimento : ${estabelecimentos}"
+                  th:value="${estabelecimento.id}"
+                  th:text="${estabelecimento.nome}"
+                  th:selected="${usuario.estabelecimentoId == estabelecimento.id}"
+                ></option>
+              </select>
+            </div>
+          </div>
+          <div class="flex justify-center space-x-2">
+            <a
+              href="/admin/usuarios"
+              class="bg-[#297e1d] hover:bg-green-900 text-white border border-black font-bold py-2 px-4 sm:py-2 sm:px-6 md:px-8 lg:px-10 rounded focus:outline-none focus:shadow-outline w-auto text-sm shadow-xl shadow-green-950/50 transform duration-200 hover:scale-105"
+            >
+              Cancelar
+            </a>
+            <button
+              type="submit"
+              class="bg-[#297e1d] hover:bg-green-900 text-white border border-black font-bold py-2 px-4 sm:py-2 sm:px-6 md:px-8 lg:px-10 rounded focus:outline-none focus:shadow-outline w-auto text-sm shadow-xl shadow-green-950/50 transform duration-200 hover:scale-105"
+            >
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+    <div th:replace="~{Footer :: main-footer}"></div>
+  </body>
+</html>

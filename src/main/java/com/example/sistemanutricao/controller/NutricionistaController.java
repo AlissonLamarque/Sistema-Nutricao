@@ -25,9 +25,11 @@ import com.example.sistemanutricao.model.Status;
 import static com.example.sistemanutricao.model.Status.ATIVA;
 import com.example.sistemanutricao.model.StatusCriacao;
 import static com.example.sistemanutricao.model.StatusCriacao.COMPLETA;
+import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaComTagDTO;
 import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaCreateDTO;
 import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaGetDTO;
 import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaUpdateDTO;
+import com.example.sistemanutricao.record.IngredienteDTO.IngredienteComTagDTO;
 import com.example.sistemanutricao.record.IngredienteDTO.IngredienteCreateDTO;
 import com.example.sistemanutricao.record.IngredienteDTO.IngredienteGetDTO;
 import com.example.sistemanutricao.record.IngredienteDTO.IngredienteUpdateDTO;
@@ -227,6 +229,32 @@ public class NutricionistaController {
         return "Nutri/Ficha/List";
     }
 
+    @GetMapping("/fichas/por-tag")
+    public String buscarFichasPorTag(
+            @RequestParam String campo,
+            @RequestParam String tag,
+            Model model,
+            @AuthenticationPrincipal UsuarioSecurity usuarioPrincipal) {
+        try {
+            Long usuarioId = usuarioPrincipal.getId();
+            List<FichaTecnicaComTagDTO> fichas = fichaTecnicaService.buscarPorTag(campo, tag, usuarioId);
+            model.addAttribute("fichas", fichas);
+            model.addAttribute("pesquisaPorTag", true);
+            model.addAttribute("isComTagDTO", true);
+            return "Nutri/Ficha/List";
+        } catch (Exception e) {
+            // Log the error for debugging
+            System.err.println("Error in buscarFichasPorTag (Nutricionista): " + e.getMessage());
+            e.printStackTrace();
+            
+            // Return empty list and error message
+            model.addAttribute("fichas", new ArrayList<>());
+            model.addAttribute("error", "Erro ao buscar fichas por tag: " + e.getMessage());
+            model.addAttribute("pesquisaPorTag", true);
+            model.addAttribute("isComTagDTO", true);
+            return "Nutri/Ficha/List";
+        }
+    }
 
     @GetMapping("/fichas/{id}")
     public String mostrarFichaPorId(@PathVariable Long id, Model model) {
@@ -432,6 +460,58 @@ public class NutricionistaController {
         model.addAttribute("ingredientes", ingredientes);
         model.addAttribute("view", "taco");
         return "Nutri/Ingrediente/List";
+    }
+
+    @GetMapping("/ingredientes/por-tag")
+    public String buscarIngredientesPorTag(
+            @RequestParam String campo,
+            @RequestParam String tag,
+            Model model,
+            @AuthenticationPrincipal UsuarioSecurity usuarioPrincipal) {
+        try {
+            Long usuarioId = usuarioPrincipal.getId();
+            List<IngredienteComTagDTO> ingredientes = ingredienteService.buscarPorTag(campo, tag, usuarioId);
+            model.addAttribute("ingredientes", ingredientes);
+            model.addAttribute("view", "meus");
+            model.addAttribute("pesquisaPorTag", true);
+            model.addAttribute("isComTagDTO", true);
+            return "Nutri/Ingrediente/List";
+        } catch (Exception e) {
+            System.err.println("Error in buscarIngredientesPorTag: " + e.getMessage());
+            e.printStackTrace();
+            
+            model.addAttribute("ingredientes", new ArrayList<>());
+            model.addAttribute("error", "Erro ao buscar ingredientes por tag: " + e.getMessage());
+            model.addAttribute("view", "meus");
+            model.addAttribute("pesquisaPorTag", true);
+            model.addAttribute("isComTagDTO", true);
+            return "Nutri/Ingrediente/List";
+        }
+    }
+
+    @GetMapping("/ingredientes/usuario4/por-tag")
+    public String buscarIngredientesUsuario4PorTag(
+            @RequestParam String campo,
+            @RequestParam String tag,
+            Model model) {
+        try {
+            List<IngredienteComTagDTO> ingredientes = ingredienteService.buscarPorTagUsuario4(campo, tag);
+            model.addAttribute("ingredientes", ingredientes);
+            model.addAttribute("view", "taco");
+            model.addAttribute("pesquisaPorTag", true);
+            model.addAttribute("isComTagDTO", true);
+            return "Nutri/Ingrediente/List";
+        } catch (Exception e) {
+            System.err.println("Error in buscarIngredientesUsuario4PorTag: " + e.getMessage());
+            e.printStackTrace();
+            
+            model.addAttribute("ingredientes", new ArrayList<>());
+            model.addAttribute("error", "Erro ao buscar ingredientes por tag: " + e.getMessage());
+            model.addAttribute("view", "taco");
+            model.addAttribute("pesquisaPorTag", true);
+            model.addAttribute("isComTagDTO", true);
+            return "Nutri/Ingrediente/List";
+        }
     }
 
     @GetMapping("/ingredientes/por-status")

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt_BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+  </head>
+  <body
+    class="bg-[#e9ffd0] min-h-screen flex items-center justify-center p-4 lg:p-8"
+  >
+    <div
+      class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-8 md:gap-16 lg:gap-28 xl:gap-44"
+    >
+      <div class="w-full max-w-sm lg:w-auto flex-1">
+        <div
+          id="login-card"
+          class="bg-[#599e4a] rounded-2xl overflow-hidden transition-all duration-300 shadow-xl shadow-green-950/50 w-full"
+        >
+          <div class="p-6 md:p-8 lg:p-10">
+            <!-- Logo no mobile - aparece quando a tela é menor que lg -->
+            <div class="flex justify-center mb-6 lg:hidden">
+              <img
+                th:src="@{/imagens/Logo.png}"
+                alt="Logo do Sistema"
+                class="h-16 md:h-20 w-auto object-contain"
+              />
+            </div>
+            <!-- Ícone no desktop -->
+            <div class="hidden lg:flex justify-center mb-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-12 w-12 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"
+                />
+              </svg>
+            </div>
+
+            <div
+              th:if="${param.error}"
+              class="mb-4 p-3 bg-red-100 text-red-800 rounded-lg text-center border border-red-200 text-sm md:text-base"
+            >
+              Usuário ou senha inválidos.
+            </div>
+
+            <form th:action="@{/}" method="post" class="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="Usuário"
+                  required
+                  class="w-full px-4 py-2 md:px-4 md:py-3 text-sm md:text-base border border-[#3a7d2c] rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-[#6daf5e] text-white placeholder-[#c8e6c1]"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Senha"
+                  required
+                  class="w-full px-4 py-2 md:px-4 md:py-3 text-sm md:text-base border border-[#3a7d2c] rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-[#6daf5e] text-white placeholder-[#c8e6c1]"
+                />
+              </div>
+
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  id="remember-me"
+                  name="remember-me"
+                  class="w-4 h-4 text-[#297e1d] bg-[#6daf5e] border-[#3a7d2c] rounded focus:ring-white focus:ring-2"
+                />
+                <label for="remember-me" class="ml-2 text-sm text-white">
+                  Lembrar de mim
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full text-sm md:text-base bg-[#297e1d] hover:bg-[#1f6b15] text-white font-bold py-2 md:py-3 px-4 rounded-lg transition duration-300 shadow-md hover:shadow-lg"
+              >
+                Entrar
+              </button>
+            </form>
+
+            <button
+              id="show-register"
+              class="w-full mt-4 text-sm md:text-base bg-white hover:bg-gray-100 text-[#297e1d] font-bold py-2 md:py-3 px-4 rounded-lg transition duration-300 border-2 border-[#297e1d]"
+            >
+              Criar conta
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="register-card"
+          class="bg-[#599e4a] rounded-2xl shadow-xl overflow-hidden hidden transition-all duration-300 border-2 border-[#3a7d2c] w-full"
+        >
+          <div class="p-6 md:p-8 lg:p-10">
+            <!-- Logo no mobile -->
+            <div class="flex justify-center mb-6 lg:hidden">
+              <img
+                th:src="@{/imagens/Logo.png}"
+                alt="Logo do Sistema"
+                class="h-16 md:h-20 w-auto object-contain"
+              />
+            </div>
+
+            <!-- Ícone no desktop -->
+            <div class="hidden lg:flex justify-center mb-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-12 w-12 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                />
+              </svg>
+            </div>
+
+            <form
+              id="register-form"
+              th:action="@{/registrar}"
+              method="post"
+              class="space-y-4"
+            >
+              <div>
+                <input
+                  type="text"
+                  id="reg-username"
+                  name="username"
+                  placeholder="Usuário"
+                  required
+                  class="w-full px-4 py-2 md:px-4 md:py-3 text-sm md:text-base border border-[#3a7d2c] rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-[#6daf5e] text-white placeholder-[#c8e6c1]"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="email"
+                  id="reg-email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                  class="w-full px-4 py-2 md:px-4 md:py-3 text-sm md:text-base border border-[#3a7d2c] rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-[#6daf5e] text-white placeholder-[#c8e6c1]"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="password"
+                  id="reg-password"
+                  name="senha"
+                  placeholder="Senha"
+                  required
+                  class="w-full px-4 py-2 md:px-4 md:py-3 text-sm md:text-base border border-[#3a7d2c] rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-[#6daf5e] text-white placeholder-[#c8e6c1]"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="password"
+                  id="reg-confirm-password"
+                  name="confirmarSenha"
+                  placeholder="Repita a senha"
+                  required
+                  class="w-full px-4 py-2 md:px-4 md:py-3 text-sm md:text-base border border-[#3a7d2c] rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-[#6daf5e] text-white placeholder-[#c8e6c1]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="w-full text-sm md:text-base bg-[#297e1d] hover:bg-[#1f6b15] text-white font-bold py-2 md:py-3 px-4 rounded-lg transition duration-300 shadow-md hover:shadow-lg"
+              >
+                Registrar
+              </button>
+            </form>
+
+            <button
+              id="show-login"
+              class="w-full mt-4 text-sm md:text-base bg-white hover:bg-gray-100 text-[#297e1d] font-bold py-2 md:py-3 px-4 rounded-lg transition duration-300 border-2 border-[#297e1d]"
+            >
+              Já tenho conta
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="hidden lg:flex flex-col items-center justify-center w-full lg:w-auto mb-6 lg:mb-0 px-4 lg:order-last order-first"
+      >
+        <img
+          th:src="@{/imagens/Logo.png}"
+          alt="Logo do Sistema"
+          class="w-auto h-64 xl:h-80 2xl:h-[28rem] object-contain transition-all duration-300"
+        />
+        <h1
+          class="text-3xl md:text-5xl lg:text-6xl xl:text-8xl text-green-700 font-bold mt-2 md:mt-4 text-center"
+        >
+          Victus
+        </h1>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const loginCard = document.getElementById("login-card");
+        const registerCard = document.getElementById("register-card");
+        const showRegister = document.getElementById("show-register");
+        const showLogin = document.getElementById("show-login");
+        const rememberMeCheckbox = document.getElementById("remember-me");
+
+        // Carregar estado do "Lembrar de mim" do localStorage
+        const savedRememberMe = localStorage.getItem("rememberMe");
+        if (savedRememberMe === "true") {
+          rememberMeCheckbox.checked = true;
+        }
+
+        // Salvar estado do "Lembrar de mim" no localStorage
+        rememberMeCheckbox.addEventListener("change", function () {
+          localStorage.setItem("rememberMe", this.checked);
+        });
+
+        showRegister.addEventListener("click", function () {
+          loginCard.classList.add("hidden");
+          registerCard.classList.remove("hidden");
+        });
+
+        showLogin.addEventListener("click", function () {
+          registerCard.classList.add("hidden");
+          loginCard.classList.remove("hidden");
+        });
+
+        document
+          .getElementById("register-form")
+          .addEventListener("submit", function (e) {
+            const password = document.getElementById("reg-password").value;
+            const confirmPassword = document.getElementById(
+              "reg-confirm-password"
+            ).value;
+            const email = document.getElementById("reg-email").value;
+
+            if (password !== confirmPassword) {
+              e.preventDefault();
+              alert("As senhas não coincidem!");
+              return;
+            }
+            if (!email.includes("@") || !email.includes(".")) {
+              e.preventDefault();
+              alert("Por favor, insira um e-mail válido!");
+              return;
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

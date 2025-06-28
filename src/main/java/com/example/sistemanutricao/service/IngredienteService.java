@@ -1,21 +1,24 @@
 package com.example.sistemanutricao.service;
 
-import com.example.sistemanutricao.model.Ingrediente;
-import com.example.sistemanutricao.model.Status;
-import com.example.sistemanutricao.model.Usuario;
-import com.example.sistemanutricao.record.IngredienteDTO.IngredienteCreateDTO;
-import com.example.sistemanutricao.record.IngredienteDTO.IngredienteGetDTO;
-import com.example.sistemanutricao.record.IngredienteDTO.IngredienteUpdateDTO;
-import com.example.sistemanutricao.repository.IngredienteRepository;
-import com.example.sistemanutricao.repository.UsuarioRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import org.springframework.stereotype.Service;
+
+import com.example.sistemanutricao.model.Ingrediente;
+import com.example.sistemanutricao.model.Status;
+import com.example.sistemanutricao.model.Usuario;
+import com.example.sistemanutricao.record.IngredienteDTO.IngredienteComTagDTO;
+import com.example.sistemanutricao.record.IngredienteDTO.IngredienteCreateDTO;
+import com.example.sistemanutricao.record.IngredienteDTO.IngredienteGetDTO;
+import com.example.sistemanutricao.record.IngredienteDTO.IngredienteUpdateDTO;
+import com.example.sistemanutricao.repository.IngredienteRepository;
+import com.example.sistemanutricao.repository.UsuarioRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class IngredienteService {
@@ -187,6 +190,88 @@ public class IngredienteService {
                 .stream()
                 .map(this::convertToDto)
                 .toList();
+    }
+
+    // Métodos para pesquisa por tags
+    public List<IngredienteComTagDTO> buscarPorTag(String campo, String tag, Long usuarioId) {
+        List<Ingrediente> ingredientes = ingredienteRepository.findByStatusAndUsuario_Id(Status.ATIVA, usuarioId);
+        return ingredientes.stream()
+                .map(ing -> new IngredienteComTagDTO(
+                        ing.getId(),
+                        ing.getNome(),
+                        ing.getPtn(),
+                        ing.getCho(),
+                        ing.getLip(),
+                        ing.getStatus(),
+                        ing.getSodio(),
+                        ing.getGorduraSaturada(),
+                        ing.getUsuario().getId(),
+                        determinarTag(ing, campo)
+                ))
+                .filter(ing -> ing.tag().equalsIgnoreCase(tag))
+                .toList();
+    }
+
+    public List<IngredienteComTagDTO> buscarPorTagUsuario4(String campo, String tag) {
+        List<Ingrediente> ingredientes = ingredienteRepository.findByStatusAndUsuario_Id(Status.ATIVA, USUARIO_ID_4);
+        return ingredientes.stream()
+                .map(ing -> new IngredienteComTagDTO(
+                        ing.getId(),
+                        ing.getNome(),
+                        ing.getPtn(),
+                        ing.getCho(),
+                        ing.getLip(),
+                        ing.getStatus(),
+                        ing.getSodio(),
+                        ing.getGorduraSaturada(),
+                        ing.getUsuario().getId(),
+                        determinarTag(ing, campo)
+                ))
+                .filter(ing -> ing.tag().equalsIgnoreCase(tag))
+                .toList();
+    }
+
+    private String determinarTag(Ingrediente ingrediente, String campo) {
+        BigDecimal valor = obterValorCampo(ingrediente, campo);
+        if (valor == null) return "Baixa";
+
+        // Definir limites para cada campo
+        switch (campo.toLowerCase()) {
+            case "ptn":
+                return valor.compareTo(new BigDecimal("10")) >= 0 ? "Alta" : 
+                       valor.compareTo(new BigDecimal("5")) >= 0 ? "Media" : "Baixa";
+            case "cho":
+                return valor.compareTo(new BigDecimal("30")) >= 0 ? "Alta" : 
+                       valor.compareTo(new BigDecimal("15")) >= 0 ? "Media" : "Baixa";
+            case "lip":
+                return valor.compareTo(new BigDecimal("10")) >= 0 ? "Alta" : 
+                       valor.compareTo(new BigDecimal("5")) >= 0 ? "Media" : "Baixa";
+            case "sodio":
+                return valor.compareTo(new BigDecimal("500")) >= 0 ? "Alta" : 
+                       valor.compareTo(new BigDecimal("200")) >= 0 ? "Media" : "Baixa";
+            case "gorduras":
+                return valor.compareTo(new BigDecimal("5")) >= 0 ? "Alta" : 
+                       valor.compareTo(new BigDecimal("2")) >= 0 ? "Media" : "Baixa";
+            default:
+                return "Baixa";
+        }
+    }
+
+    private BigDecimal obterValorCampo(Ingrediente ingrediente, String campo) {
+        switch (campo.toLowerCase()) {
+            case "ptn":
+                return ingrediente.getPtn();
+            case "cho":
+                return ingrediente.getCho();
+            case "lip":
+                return ingrediente.getLip();
+            case "sodio":
+                return ingrediente.getSodio();
+            case "gorduras":
+                return ingrediente.getGorduraSaturada();
+            default:
+                return null;
+        }
     }
 
     private IngredienteGetDTO convertToDto(Ingrediente ingre) {

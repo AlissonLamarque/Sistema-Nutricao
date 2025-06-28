@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estabelecimentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col"
+  >
+    <div th:replace="~{Admin/Header :: main-header}"></div>
+    <main
+      class="flex-1 flex items-start justify-center w-full px-4 pt-8 md:pt-16 mb-16 sm:mb-0"
+    >
+      <div class="rounded-3xl w-full max-w-5xl sm:p-6 md:p-8 lg:p-10 xl:p-12">
+        <div class="flex justify-center items-center mb-8">
+          <h1 class="text-3xl font-bold text-black">Estabelecimentos</h1>
+        </div>
+
+        <div class="space-y-4">
+          <div
+            th:each="estabelecimento : ${estabelecimentos}"
+            class="bg-[#89be77] rounded-xl sm:rounded-full shadow-xl shadow-green-950/50 border border-black overflow-hidden p-4 flex flex-col sm:flex-row sm:items-center justify-between"
+          >
+            <div
+              class="text-2xl font-medium text-gray-900 w-full mb-4 sm:mb-0 truncate text-center sm:text-left"
+              th:text="${estabelecimento.nome}"
+            ></div>
+            <div
+              class="flex flex-col gap-2 sm:flex-row sm:gap-4 justify-center items-center w-full sm:w-auto"
+            >
+              <div
+                class="text-base text-gray-600"
+                th:text="${#lists.size(estabelecimento.usuarios)} + ' usuário(s)'"
+              ></div>
+              <a
+                th:href="@{/admin/estabelecimentos/{id}/editar(id=${estabelecimento.id})}"
+                class="inline-flex items-center justify-center px-4 py-2 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50 text-black text-base hover:bg-[#b9dfa3] transform duration-200 hover:scale-105"
+              >
+                Editar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div th:replace="~{Footer :: main-footer}"></div>
+  </body>
+</html>

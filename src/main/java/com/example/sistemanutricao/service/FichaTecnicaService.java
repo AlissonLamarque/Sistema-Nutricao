@@ -16,6 +16,7 @@ import com.example.sistemanutricao.model.Preparacao;
 import com.example.sistemanutricao.model.Status;
 import com.example.sistemanutricao.model.StatusCriacao;
 import com.example.sistemanutricao.model.Usuario;
+import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaComTagDTO;
 import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaCreateDTO;
 import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaGetDTO;
 import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaUpdateDTO;
@@ -379,13 +380,187 @@ public class FichaTecnicaService {
     }
 
     public List<FichaTecnicaGetDTO> buscarPorGramasSaturadaPerfilNutricionalEEstabelecimento(BigDecimal gramasSaturada, Long estabelecimentoId) {
-        return fichaRepository.findByStatusAndNutricionistaEstabelecimentoIdAndStatusCriacaoAndPerfilNutricionalGramasSaturada(
-                        Status.ATIVA, estabelecimentoId, StatusCriacao.COMPLETA, gramasSaturada)
+        return fichaRepository.findByStatusAndNutricionistaEstabelecimentoIdAndStatusCriacao(Status.ATIVA, estabelecimentoId, StatusCriacao.COMPLETA)
                 .stream()
+                .filter(ficha -> ficha.getPerfilNutricional().getGramasSaturada().equals(gramasSaturada))
                 .map(ficha -> convertToDto(ficha, ipfService.getAllIngredientesPorFicha()))
                 .toList();
     }
 
+    // Métodos para pesquisa por tags
+    public List<FichaTecnicaComTagDTO> buscarPorTag(String campo, String tag, Long nutricionistaId) {
+        try {
+            if (campo == null || tag == null || nutricionistaId == null) {
+                System.err.println("Invalid parameters: campo=" + campo + ", tag=" + tag + ", nutricionistaId=" + nutricionistaId);
+                return new ArrayList<>();
+            }
+            
+            List<FichaTecnica> fichas = fichaRepository.findByStatusAndNutricionista_IdAndStatusCriacao(Status.ATIVA, nutricionistaId, StatusCriacao.COMPLETA);
+            
+            if (fichas == null || fichas.isEmpty()) {
+                System.out.println("No fichas found for nutricionistaId: " + nutricionistaId);
+                return new ArrayList<>();
+            }
+            
+            return fichas.stream()
+                    .filter(ficha -> ficha.getPreparacao() != null && ficha.getPerfilNutricional() != null && ficha.getNutricionista() != null)
+                    .map(ficha -> {
+                        try {
+                            return new FichaTecnicaComTagDTO(
+                                    ficha.getId(),
+                                    ficha.getPreparacao().getNome() != null ? ficha.getPreparacao().getNome() : "",
+                                    ficha.getPreparacao().getCategoria() != null ? ficha.getPreparacao().getCategoria().getNome() : "",
+                                    ficha.getPreparacao().getNumero() != null ? ficha.getPreparacao().getNumero() : 0,
+                                    ficha.getCustoPerCapita(),
+                                    ficha.getCustoTotal(),
+                                    ficha.getPreparacao().getRendimento(),
+                                    ficha.getPerfilNutricional().getVtc(),
+                                    ficha.getPerfilNutricional().getGramasPTN(),
+                                    ficha.getPerfilNutricional().getGramasCHO(),
+                                    ficha.getPerfilNutricional().getGramasLIP(),
+                                    ficha.getPerfilNutricional().getGramasSodio(),
+                                    ficha.getPerfilNutricional().getGramasSaturada(),
+                                    ficha.getStatus(),
+                                    ficha.getStatusCriacao(),
+                                    ficha.getNutricionista().getId(),
+                                    determinarTag(ficha, campo)
+                            );
+                        } catch (Exception e) {
+                            System.err.println("Error creating FichaTecnicaComTagDTO for ficha ID " + ficha.getId() + ": " + e.getMessage());
+                            return null;
+                        }
+                    })
+                    .filter(ficha -> ficha != null && ficha.tag().equalsIgnoreCase(tag))
+                    .toList();
+        } catch (Exception e) {
+            System.err.println("Error in buscarPorTag: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<FichaTecnicaComTagDTO> buscarPorTagEstabelecimento(String campo, String tag, Long estabelecimentoId) {
+        try {
+            if (campo == null || tag == null || estabelecimentoId == null) {
+                System.err.println("Invalid parameters: campo=" + campo + ", tag=" + tag + ", estabelecimentoId=" + estabelecimentoId);
+                return new ArrayList<>();
+            }
+            
+            List<FichaTecnica> fichas = fichaRepository.findByStatusAndNutricionistaEstabelecimentoIdAndStatusCriacao(Status.ATIVA, estabelecimentoId, StatusCriacao.COMPLETA);
+            
+            if (fichas == null || fichas.isEmpty()) {
+                System.out.println("No fichas found for estabelecimentoId: " + estabelecimentoId);
+                return new ArrayList<>();
+            }
+            
+            return fichas.stream()
+                    .filter(ficha -> ficha.getPreparacao() != null && ficha.getPerfilNutricional() != null && ficha.getNutricionista() != null)
+                    .map(ficha -> {
+                        try {
+                            return new FichaTecnicaComTagDTO(
+                                    ficha.getId(),
+                                    ficha.getPreparacao().getNome() != null ? ficha.getPreparacao().getNome() : "",
+                                    ficha.getPreparacao().getCategoria() != null ? ficha.getPreparacao().getCategoria().getNome() : "",
+                                    ficha.getPreparacao().getNumero() != null ? ficha.getPreparacao().getNumero() : 0,
+                                    ficha.getCustoPerCapita(),
+                                    ficha.getCustoTotal(),
+                                    ficha.getPreparacao().getRendimento(),
+                                    ficha.getPerfilNutricional().getVtc(),
+                                    ficha.getPerfilNutricional().getGramasPTN(),
+                                    ficha.getPerfilNutricional().getGramasCHO(),
+                                    ficha.getPerfilNutricional().getGramasLIP(),
+                                    ficha.getPerfilNutricional().getGramasSodio(),
+                                    ficha.getPerfilNutricional().getGramasSaturada(),
+                                    ficha.getStatus(),
+                                    ficha.getStatusCriacao(),
+                                    ficha.getNutricionista().getId(),
+                                    determinarTag(ficha, campo)
+                            );
+                        } catch (Exception e) {
+                            System.err.println("Error creating FichaTecnicaComTagDTO for ficha ID " + ficha.getId() + ": " + e.getMessage());
+                            return null;
+                        }
+                    })
+                    .filter(ficha -> ficha != null && ficha.tag().equalsIgnoreCase(tag))
+                    .toList();
+        } catch (Exception e) {
+            System.err.println("Error in buscarPorTagEstabelecimento: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    private String determinarTag(FichaTecnica ficha, String campo) {
+        try {
+            if (ficha == null || campo == null) {
+                return "Baixa";
+            }
+            
+            BigDecimal valor = obterValorCampo(ficha, campo);
+            if (valor == null) return "Baixa";
+
+            // Definir limites para cada campo
+            switch (campo.toLowerCase()) {
+                case "custoPerCapita":
+                    return valor.compareTo(new BigDecimal("5.00")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("2.50")) >= 0 ? "Media" : "Baixa";
+                case "custoTotal":
+                    return valor.compareTo(new BigDecimal("100.00")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("50.00")) >= 0 ? "Media" : "Baixa";
+                case "rendimento":
+                    return valor.compareTo(new BigDecimal("50")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("25")) >= 0 ? "Media" : "Baixa";
+                case "vtc":
+                    return valor.compareTo(new BigDecimal("500")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("300")) >= 0 ? "Media" : "Baixa";
+                case "gramasPTN":
+                    return valor.compareTo(new BigDecimal("20")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("10")) >= 0 ? "Media" : "Baixa";
+                case "gramasCHO":
+                    return valor.compareTo(new BigDecimal("60")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("30")) >= 0 ? "Media" : "Baixa";
+                case "gramasLIP":
+                    return valor.compareTo(new BigDecimal("20")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("10")) >= 0 ? "Media" : "Baixa";
+                case "gramasSodio":
+                    return valor.compareTo(new BigDecimal("1000")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("500")) >= 0 ? "Media" : "Baixa";
+                case "gramasSaturada":
+                    return valor.compareTo(new BigDecimal("10")) >= 0 ? "Alta" : 
+                           valor.compareTo(new BigDecimal("5")) >= 0 ? "Media" : "Baixa";
+                default:
+                    return "Baixa";
+            }
+        } catch (Exception e) {
+            System.err.println("Error in determinarTag: " + e.getMessage());
+            return "Baixa";
+        }
+    }
+
+    private BigDecimal obterValorCampo(FichaTecnica ficha, String campo) {
+        switch (campo.toLowerCase()) {
+            case "custoPerCapita":
+                return ficha.getCustoPerCapita();
+            case "custoTotal":
+                return ficha.getCustoTotal();
+            case "rendimento":
+                return ficha.getPreparacao() != null ? ficha.getPreparacao().getRendimento() : null;
+            case "vtc":
+                return ficha.getPerfilNutricional() != null ? ficha.getPerfilNutricional().getVtc() : null;
+            case "gramasPTN":
+                return ficha.getPerfilNutricional() != null ? ficha.getPerfilNutricional().getGramasPTN() : null;
+            case "gramasCHO":
+                return ficha.getPerfilNutricional() != null ? ficha.getPerfilNutricional().getGramasCHO() : null;
+            case "gramasLIP":
+                return ficha.getPerfilNutricional() != null ? ficha.getPerfilNutricional().getGramasLIP() : null;
+            case "gramasSodio":
+                return ficha.getPerfilNutricional() != null ? ficha.getPerfilNutricional().getGramasSodio() : null;
+            case "gramasSaturada":
+                return ficha.getPerfilNutricional() != null ? ficha.getPerfilNutricional().getGramasSaturada() : null;
+            default:
+                return null;
+        }
+    }
 
     //Tem que arrumar!!
     public List<FichaTecnicaGetDTO> buscarPorCategoriaPreparacao(String nome) {

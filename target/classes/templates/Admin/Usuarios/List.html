@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuários</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col"
+  >
+    <div th:replace="~{Admin/Header :: main-header}"></div>
+    <main
+      class="flex-1 flex items-start justify-center w-full px-4 pt-8 md:pt-16 mb-16 sm:mb-0"
+    >
+      <div class="rounded-3xl w-full max-w-5xl sm:p-6 md:p-8 lg:p-10 xl:p-12">
+        <div class="flex justify-center items-center mb-8">
+          <h1 class="text-3xl font-bold text-black">Usuários</h1>
+        </div>
+
+        <div class="space-y-4">
+          <div
+            th:each="usuario : ${usuarios}"
+            class="bg-[#89be77] rounded-xl sm:rounded-full shadow-xl shadow-green-950/50 border border-black overflow-hidden p-4 h-full"
+          >
+            <div
+              class="grid grid-cols-1 sm:grid-cols-[2fr_2fr_2fr] gap-2 sm:gap-4 items-center w-full h-full"
+            >
+              <!-- Nome e email -->
+              <div
+                class="flex flex-col min-w-0 justify-center h-full items-center sm:items-start"
+              >
+                <div
+                  class="text-2xl font-medium text-black truncate"
+                  th:text="${usuario.username}"
+                ></div>
+                <div
+                  class="text-sm text-black truncate"
+                  th:text="${usuario.email}"
+                ></div>
+              </div>
+              <!-- Cargos -->
+              <div class="flex justify-center">
+                <form
+                  th:action="@{/admin/usuarios/{id}/cargo(id=${usuario.id})}"
+                  method="post"
+                  class="flex justify-center"
+                >
+                  <input
+                    type="hidden"
+                    name="cargo"
+                    th:id="'cargoInput_' + ${usuario.id}"
+                  />
+                  <div class="flex gap-2">
+                    <!-- Sem Cargo -->
+                    <button
+                      type="button"
+                      th:if="${usuario.cargo == null or #strings.isEmpty(usuario.cargo)}"
+                      th:class="${usuario.cargo == null or #strings.isEmpty(usuario.cargo)} ?
+                        'group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-green-200 border-green-700 text-green-900 shadow transition-all duration-200 focus:outline-none'
+                        : 'group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-white border-gray-300 text-gray-400 transition-all duration-200 focus:outline-none'"
+                      onclick="this.form.elements['cargo'].value=''; this.form.submit();"
+                      title="Sem Cargo"
+                    >
+                      <i class="fa-solid fa-user"></i>
+                      <span
+                        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        >Sem Cargo</span
+                      >
+                    </button>
+                    <!-- Nutricionista -->
+                    <button
+                      type="button"
+                      th:class="${usuario.cargo != null and #strings.toUpperCase(usuario.cargo) == 'NUTRICIONISTA'} ?
+                        'group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-green-200 border-green-700 text-green-900 shadow transition-all duration-200 focus:outline-none'
+                        : 'group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-white border-gray-300 text-gray-400 transition-all duration-200 focus:outline-none'"
+                      onclick="this.form.elements['cargo'].value='NUTRICIONISTA'; this.form.submit();"
+                      title="Nutricionista"
+                    >
+                      <i class="fa-solid fa-apple-whole"></i>
+                      <span
+                        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        >Nutricionista</span
+                      >
+                    </button>
+                    <!-- Produção -->
+                    <button
+                      type="button"
+                      th:class="${usuario.cargo != null and #strings.toUpperCase(usuario.cargo) == 'PRODUCAO'} ?
+                        'group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-green-200 border-green-700 text-green-900 shadow transition-all duration-200 focus:outline-none'
+                        : 'group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-white border-gray-300 text-gray-400 transition-all duration-200 focus:outline-none'"
+                      onclick="this.form.elements['cargo'].value='PRODUCAO'; this.form.submit();"
+                      title="Produção"
+                    >
+                      <i class="fa-solid fa-utensils"></i>
+                      <span
+                        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        >Produção</span
+                      >
+                    </button>
+                    <!-- Admin -->
+                    <button
+                      type="button"
+                      th:class="${usuario.cargo != null and #strings.toUpperCase(usuario.cargo) == 'ADMIN'} ?
+                        'group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-green-200 border-green-700 text-green-900 shadow transition-all duration-200 focus:outline-none'
+                        : 'group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-white border-gray-300 text-gray-400 transition-all duration-200 focus:outline-none'"
+                      onclick="this.form.elements['cargo'].value='ADMIN'; this.form.submit();"
+                      title="Admin"
+                    >
+                      <i class="fa-solid fa-user-shield"></i>
+                      <span
+                        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        >Admin</span
+                      >
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!-- Estabelecimento + Botões -->
+              <div
+                class="flex flex-col sm:flex-row sm:justify-end items-center gap-2 w-full"
+              >
+                <div
+                  class="text-sm text-black text-center sm:text-right"
+                  th:text="${usuario.estabelecimentoNome != null} ? ${usuario.estabelecimentoNome} : 'Não vinculado'"
+                ></div>
+                <div class="flex flex-row gap-2">
+                  <form
+                    th:action="@{/admin/usuarios/{id}/toggle-ativo(id=${usuario.id})}"
+                    method="post"
+                    class="flex justify-center"
+                  >
+                    <button
+                      type="submit"
+                      th:class="${usuario.ativo} ? 'inline-flex items-center px-4 py-2 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50  text-sm font-medium hover:bg-[#b9dfa3] transform duration-200 hover:scale-105' : 'inline-flex items-center px-4 py-2 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50 text-sm font-medium hover:bg-[#b9dfa3] transform duration-200 hover:scale-105'"
+                      th:text="${usuario.ativo} ? 'Ativo' : 'Inativo'"
+                    ></button>
+                  </form>
+                  <a
+                    th:href="@{/admin/usuarios/{id}/estabelecimento(id=${usuario.id})}"
+                    class="inline-flex items-center px-4 py-2 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50 text-black text-sm hover:bg-[#b9dfa3] transform duration-200 hover:scale-105 justify-center"
+                    >Vincular</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div th:replace="~{Footer :: main-footer}"></div>
+    <div
+      class="hidden bg-green-200 border-green-700 text-green-900 shadow bg-white border-gray-300 text-gray-400"
+    ></div>
+    <!-- Forçar Tailwind a gerar as classes -->
+    <span class="bg-green-200"></span>
+    <span class="border-green-700"></span>
+    <span class="text-green-900"></span>
+    <span class="shadow"></span>
+    <span class="bg-white"></span>
+    <span class="border-gray-300"></span>
+    <span class="text-gray-400"></span>
+  </body>
+</html>

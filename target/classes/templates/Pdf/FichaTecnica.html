@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ficha Técnica</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        color: #333;
+        font-size: 12px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #599e4a;
+        padding-bottom: 10px;
+      }
+      .header h1 {
+        color: #599e4a;
+        font-size: 24px;
+        margin: 0;
+      }
+      .info-table {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      .info-table td {
+        padding: 5px;
+        font-weight: bold;
+      }
+      .ingredients-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      .ingredients-table th,
+      .ingredients-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 10px;
+      }
+      .ingredients-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      .section {
+        margin-bottom: 20px;
+      }
+      .section h2 {
+        color: #599e4a;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .two-column-table {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      .two-column-table td {
+        vertical-align: top;
+        padding: 10px;
+      }
+      .details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      .details-table td {
+        padding: 5px;
+        border-bottom: 1px solid #eee;
+      }
+      .details-table td:first-child {
+        font-weight: bold;
+        color: #599e4a;
+        width: 30%;
+      }
+      .nutritional-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      .nutritional-table th,
+      .nutritional-table td {
+        border: 1px solid #ddd;
+        padding: 6px;
+        text-align: left;
+        font-size: 10px;
+      }
+      .nutritional-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      .total-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      .total-table th,
+      .total-table td {
+        border: 1px solid #ddd;
+        padding: 6px;
+        text-align: left;
+        font-size: 10px;
+      }
+      .total-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      .vct {
+        font-weight: bold;
+        font-size: 14px;
+        color: #599e4a;
+        text-align: center;
+        margin-top: 20px;
+      }
+      ol {
+        margin: 0;
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 5px;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Ficha Técnica</h1>
+    </div>
+
+    <table class="info-table">
+      <tr>
+        <td>
+          Nome da preparação:
+          <span th:text="${ficha.preparacao().nome()}"
+            >Vitamina de Banana com Aveia</span
+          >
+        </td>
+        <td>
+          Categoria:
+          <span th:text="${ficha.preparacao().categoria()}">Bebida</span>
+        </td>
+        <td>N°: <span th:text="${ficha.preparacao().numero()}">119</span></td>
+      </tr>
+    </table>
+
+    <div class="section">
+      <h2>Ingredientes</h2>
+      <table class="ingredients-table">
+        <thead>
+          <tr>
+            <th>Ingredientes</th>
+            <th>Medida Caseira</th>
+            <th>PB</th>
+            <th>PL</th>
+            <th>FC</th>
+            <th>Custo R$</th>
+            <th>Custo Kg</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="ingrediente : ${ficha.ingredientes()}">
+            <td th:text="${ingrediente.ingrediente().nome()}">
+              Banana-prata madura
+            </td>
+            <td th:text="${ingrediente.medidaCaseira()}">1 unidade média</td>
+            <td th:text="${ingrediente.pb()} + ' g'">150 g</td>
+            <td th:text="${ingrediente.pl()} + ' g'">115 g</td>
+            <td th:text="${ingrediente.fc()}">1</td>
+            <td
+              th:text="'R$ ' + ${#numbers.formatDecimal(ingrediente.custoUsado(), 1, 2)}"
+            >
+              R$ 0,60
+            </td>
+            <td
+              th:text="'R$ ' + ${#numbers.formatDecimal(ingrediente.custoKg(), 1, 2)}"
+            >
+              R$ 5,00
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <table class="two-column-table">
+        <tr>
+          <td width="60%">
+            <h2>Equipamentos e utensílios utilizados:</h2>
+            <ol>
+              <li
+                th:each="equipamento : ${#strings.arraySplit(ficha.preparacao().equipamentos(), ';')}"
+                th:text="${equipamento}"
+              >
+                liquidificador
+              </li>
+            </ol>
+          </td>
+          <td width="40%">
+            <p><strong>Custo total:</strong></p>
+            <p
+              th:text="'R$ ' + ${#numbers.formatDecimal(ficha.custoTotal(), 1, 2)}"
+            >
+              R$ 1,80
+            </p>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <table class="two-column-table">
+        <tr>
+          <td width="60%">
+            <h2>Modo de preparo:</h2>
+            <ol>
+              <li
+                th:each="passo : ${#strings.arraySplit(ficha.preparacao().modoPreparo(), ';')}"
+                th:text="${passo}"
+              >
+                Descasque e corte a banana-prata em rodelas.
+              </li>
+            </ol>
+          </td>
+          <td width="40%">
+            <p><strong>Custo per capita:</strong></p>
+            <p
+              th:text="'R$ ' + ${#numbers.formatDecimal(ficha.custoPerCapita(), 1, 2)}"
+            >
+              R$ 1,80
+            </p>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Informações Gerais</h2>
+      <table class="details-table">
+        <tr>
+          <td>Tempo de preparo:</td>
+          <td th:text="${ficha.preparacao().tempoPreparo()}">5 minutos</td>
+          <td>Peso da porção:</td>
+          <td th:text="${ficha.pesoPorcao()} + ' g'">335 g</td>
+        </tr>
+        <tr>
+          <td>Rendimento:</td>
+          <td th:text="${ficha.preparacao().rendimento()} + ' g'">335 g</td>
+          <td>Medida caseira:</td>
+          <td th:text="${ficha.medidaCaseira()}">1 copo</td>
+        </tr>
+        <tr>
+          <td>Número de porções:</td>
+          <td th:text="${ficha.numeroPorcoes()}">1</td>
+          <td>Fcc:</td>
+          <td th:text="${ficha.preparacao().fcc()}">0</td>
+        </tr>
+        <tr
+          th:unless="${ficha.preparacao().qntdAgua() != null and ficha.preparacao().qntdAgua() > 0}"
+        >
+          <td>Água:</td>
+          <td colspan="3">Não</td>
+        </tr>
+        <tr
+          th:if="${ficha.preparacao().qntdAgua() != null and ficha.preparacao().qntdAgua() > 0}"
+        >
+          <td>Quantidade de água:</td>
+          <td th:text="${ficha.preparacao().qntdAgua()} + ' ml'">200 ml</td>
+          <td>Porcentagem de água:</td>
+          <td th:text="${ficha.preparacao().porcentAgua()} + ' %'">40 %</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2 style="text-align: center">Perfil Nutricional</h2>
+
+      <table class="nutritional-table">
+        <thead>
+          <tr>
+            <th>Ingredientes</th>
+            <th>Per Capita(PL)</th>
+            <th>PTN</th>
+            <th>CHO</th>
+            <th>LIP</th>
+            <th>Sódio</th>
+            <th>Gordura Saturada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="ingrediente : ${ficha.ingredientes()}">
+            <td th:text="${ingrediente.ingrediente().nome()}">
+              Banana-prata madura
+            </td>
+            <td th:text="${ingrediente.pl()} + ' g'">115 g</td>
+            <td th:text="${ingrediente.ingrediente().ptn()} + ' g'">1,3 g</td>
+            <td th:text="${ingrediente.ingrediente().cho()} + ' g'">29,8 g</td>
+            <td th:text="${ingrediente.ingrediente().lip()} + ' g'">0,3 g</td>
+            <td th:text="${ingrediente.ingrediente().sodio()} + ' mg'">0 mg</td>
+            <td th:text="${ingrediente.ingrediente().gorduraSaturada()} + ' g'">
+              0,1 g
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Total</h3>
+      <table class="total-table">
+        <tr>
+          <th>Gramas</th>
+          <td th:text="${ficha.perfilNutricional().gramasPtn()} + ' g'">
+            10,3 g
+          </td>
+          <td th:text="${ficha.perfilNutricional().gramasCho()} + ' g'">
+            51,1 g
+          </td>
+          <td th:text="${ficha.perfilNutricional().gramasLip()} + ' g'">
+            9,0 g
+          </td>
+          <td th:text="${ficha.perfilNutricional().gramasSodio()} + ' mg'">
+            82 mg
+          </td>
+          <td th:text="${ficha.perfilNutricional().gramasSaturada()} + ' g'">
+            3,9 g
+          </td>
+        </tr>
+        <tr>
+          <th>Kcal</th>
+          <td th:text="${ficha.perfilNutricional().kcalPtn()}">41,2</td>
+          <td th:text="${ficha.perfilNutricional().kcalCho()}">204,4</td>
+          <td th:text="${ficha.perfilNutricional().kcalLip()}">81,0</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>%</th>
+          <td th:text="${ficha.perfilNutricional().porcentPtn()} + '%'">
+            12,6%
+          </td>
+          <td th:text="${ficha.perfilNutricional().porcentCho()} + '%'">
+            62,6%
+          </td>
+          <td th:text="${ficha.perfilNutricional().porcentLip()} + '%'">
+            24,8%
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+
+      <div class="vct">
+        <strong
+          >VCT:
+          <span th:text="${ficha.perfilNutricional().vtc()} + ' kcal'"
+            >326,6 kcal</span
+          ></strong
+        >
+      </div>
+    </div>
+  </body>
+</html>

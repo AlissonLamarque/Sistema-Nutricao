@@ -1,6 +1,7 @@
 package com.example.sistemanutricao.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.ByteArrayResource;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.sistemanutricao.model.Status;
 import static com.example.sistemanutricao.model.Status.ATIVA;
 import static com.example.sistemanutricao.model.StatusCriacao.COMPLETA;
+import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaComTagDTO;
 import com.example.sistemanutricao.record.FichaTecnicaDTO.FichaTecnicaGetDTO;
 import com.example.sistemanutricao.record.RefeicaoDTO.RefeicaoResponseDTO;
 import com.example.sistemanutricao.security.UsuarioSecurity;
@@ -60,6 +62,7 @@ public class ProducaoController {
 
         model.addAttribute("fichas", fichas);
         model.addAttribute("statusAtual", ATIVA);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
     @GetMapping("/fichas/custoPerCapita")
@@ -70,6 +73,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorCustPerCapitaEEstabelecimento(custoPerCapita, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -81,6 +85,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorCustoTotalEEstabelecimento(custoTotal, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -90,6 +95,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorNomePreparacaoEEstabelecimento(nome, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -99,6 +105,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorRendimentoPreparacaoEEstabelecimento(rendimento, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -108,6 +115,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorNumeroPreparacaoEEstabelecimento(numero, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -117,6 +125,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorVtcPerfilNutricionalEEstabelecimento(vtc, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -126,6 +135,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorGramasPTNPerfilNutricionalEEstabelecimento(gramasPTN, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -135,6 +145,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorGramasCHOPerfilNutricionalEEstabelecimento(gramasCHO, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -144,6 +155,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorGramasLIPPerfilNutricionalEEstabelecimento(gramasLIP, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -153,6 +165,7 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorGramasSodioPerfilNutricionalEEstabelecimento(gramasSodio, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 
@@ -162,7 +175,35 @@ public class ProducaoController {
         Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorGramasSaturadaPerfilNutricionalEEstabelecimento(gramasSaturada, estabelecimentoId);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
+    }
+
+    @GetMapping("/fichas/por-tag")
+    public String buscarFichasPorTag(
+            @RequestParam String campo,
+            @RequestParam String tag,
+            Model model,
+            @AuthenticationPrincipal UsuarioSecurity usuarioPrincipal) {
+        try {
+            Long estabelecimentoId = usuarioPrincipal.getUsuario().getEstabelecimento().getId();
+            List<FichaTecnicaComTagDTO> fichas = fichaTecnicaService.buscarPorTagEstabelecimento(campo, tag, estabelecimentoId);
+            model.addAttribute("fichas", fichas);
+            model.addAttribute("pesquisaPorTag", true);
+            model.addAttribute("isComTagDTO", true);
+            return "Producao/Ficha/List";
+        } catch (Exception e) {
+            // Log the error for debugging
+            System.err.println("Error in buscarFichasPorTag (Producao): " + e.getMessage());
+            e.printStackTrace();
+            
+            // Return empty list and error message
+            model.addAttribute("fichas", new ArrayList<>());
+            model.addAttribute("error", "Erro ao buscar fichas por tag: " + e.getMessage());
+            model.addAttribute("pesquisaPorTag", true);
+            model.addAttribute("isComTagDTO", true);
+            return "Producao/Ficha/List";
+        }
     }
 
     @GetMapping("/fichas/por-categoria")
@@ -171,6 +212,7 @@ public class ProducaoController {
             Model model) {
         List<FichaTecnicaGetDTO> fichas = fichaTecnicaService.buscarPorCategoriaPreparacao(nomeCategoria);
         model.addAttribute("fichas", fichas);
+        model.addAttribute("isComTagDTO", false);
         return "Producao/Ficha/List";
     }
 

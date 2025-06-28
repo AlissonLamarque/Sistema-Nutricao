@@ -15,5 +15,10 @@ public record IngredientePorFichaDTO(
         String medidaCaseira,
         BigDecimal pb,
         BigDecimal pl,
+        BigDecimal ptnCalculado,
+        BigDecimal choCalculado,
+        BigDecimal lipCalculado,
+        BigDecimal sodioCalculado,
+        BigDecimal gorduraSaturadaCalculada,
         FichaTecnicaCreateDTO fichaTecnica
 ) {}

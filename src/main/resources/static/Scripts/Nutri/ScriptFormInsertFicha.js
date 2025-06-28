@@ -86,20 +86,40 @@ document.addEventListener("DOMContentLoaded", function () {
             <input type="hidden" name="ingredientes[${idx}].ingredienteId" value="${ingredienteId}">
             <input type="hidden" name="ingredientes[${idx}].medidaCaseira" value="${medidaCaseira}">
             <input type="hidden" class="ingrediente-ptn" value="${
-              selectedOption.dataset.ptn || 0
+              parseFloat(selectedOption.dataset.ptn) || 0
             }">
             <input type="hidden" class="ingrediente-cho" value="${
-              selectedOption.dataset.cho || 0
+              parseFloat(selectedOption.dataset.cho) || 0
             }">
             <input type="hidden" class="ingrediente-lip" value="${
-              selectedOption.dataset.lip || 0
+              parseFloat(selectedOption.dataset.lip) || 0
             }">
             <input type="hidden" class="ingrediente-sodio" value="${
-              selectedOption.dataset.sodio || 0
+              parseFloat(selectedOption.dataset.sodio) || 0
             }">
             <input type="hidden" class="ingrediente-saturada" value="${
-              selectedOption.dataset.saturada || 0
+              parseFloat(selectedOption.dataset.saturada) || 0
             }">
+            <input type="hidden" name="ingredientes[${idx}].ptnCalculado" value="${(
+      ((parseFloat(selectedOption.dataset.ptn) || 0) * pl) /
+      100
+    ).toFixed(2)}">
+            <input type="hidden" name="ingredientes[${idx}].choCalculado" value="${(
+      ((parseFloat(selectedOption.dataset.cho) || 0) * pl) /
+      100
+    ).toFixed(2)}">
+            <input type="hidden" name="ingredientes[${idx}].lipCalculado" value="${(
+      ((parseFloat(selectedOption.dataset.lip) || 0) * pl) /
+      100
+    ).toFixed(2)}">
+            <input type="hidden" name="ingredientes[${idx}].sodioCalculado" value="${(
+      ((parseFloat(selectedOption.dataset.sodio) || 0) * pl) /
+      100
+    ).toFixed(2)}">
+            <input type="hidden" name="ingredientes[${idx}].gorduraSaturadaCalculada" value="${(
+      ((parseFloat(selectedOption.dataset.saturada) || 0) * pl) /
+      100
+    ).toFixed(2)}">
         `;
 
     document.getElementById("ingredientesAdicionados").appendChild(row);
@@ -272,7 +292,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const fatores = ["ptn", "cho", "lip", "sodio", "saturada"].map(
       (nutriente) => {
         const el = row.querySelector(`.ingrediente-${nutriente}`);
-        const value = el && el.value ? parseFloat(el.value) : 0;
+        const value = el && el.value ? parseFloat(el.value) || 0 : 0;
         return { nutriente, value };
       }
     );
@@ -620,7 +640,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Atualiza o campo FCC
       if (fccInput) {
         if (pesoCru > 0 && rendimento > 0) {
-          fccInput.value = fcc.toFixed(4);
+          fccInput.value = fcc.toFixed(2);
         } else {
           fccInput.value = "";
         }

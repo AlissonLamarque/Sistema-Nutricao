@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!btnPesquisaEspecifica || !btnPesquisaTag) return;
     if (tipo === "especifico") {
       btnPesquisaEspecifica.className =
-        "group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-green-200 border-green-700 text-green-900 shadow transition-all duration-200 focus:outline-none";
+        "group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-[#599e4a] border-green-900 text-green-950 shadow transition-all duration-200 focus:outline-none";
       btnPesquisaTag.className =
         "group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-white border-gray-300 text-gray-400 transition-all duration-200 focus:outline-none";
       valorPesquisa.placeholder = "Valor do campo";
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       btnPesquisaEspecifica.className =
         "group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-white border-gray-300 text-gray-400 transition-all duration-200 focus:outline-none";
       btnPesquisaTag.className =
-        "group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-green-200 border-green-700 text-green-900 shadow transition-all duration-200 focus:outline-none";
+        "group relative flex items-center justify-center w-10 h-10 rounded-full border-2 bg-[#599e4a] border-green-900 text-green-950 shadow transition-all duration-200 focus:outline-none";
       valorPesquisa.placeholder = "Alta, Media ou Baixa";
     }
     tipoPesquisa.value = tipo;

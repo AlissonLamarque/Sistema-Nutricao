@@ -26,8 +26,7 @@ public class AdminInitializationService implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         logger.info("Verificando se existe usuário admin no sistema...");
-        
-        // Verifica se já existe algum usuário com cargo ADMIN
+
         var usuariosAdmin = usuarioRepository.findByCargo(Cargo.ADMIN);
         
         if (usuariosAdmin.isEmpty()) {

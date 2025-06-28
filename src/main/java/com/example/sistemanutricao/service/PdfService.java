@@ -21,14 +21,11 @@ public class PdfService {
 
     public byte[] generateFichaTecnicaPdf(FichaTecnicaGetDTO ficha) {
         try {
-            // Criar contexto do Thymeleaf
             Context context = new Context();
             context.setVariable("ficha", ficha);
 
-            // Renderizar o template HTML
             String htmlContent = templateEngine.process("Pdf/FichaTecnica", context);
 
-            // Gerar PDF
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
             HtmlConverter.convertToPdf(htmlContent, outputStream);

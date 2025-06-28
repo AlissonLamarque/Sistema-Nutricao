@@ -29,6 +29,13 @@ public class IngredientesPorFicha {
 
     private BigDecimal custoKG;
 
+    // Valores nutricionais calculados com base no PL
+    private BigDecimal ptnCalculado;
+    private BigDecimal choCalculado;
+    private BigDecimal lipCalculado;
+    private BigDecimal sodioCalculado;
+    private BigDecimal gorduraSaturadaCalculada;
+
     @ManyToOne
     @JoinColumn(name = "fichaTecnica_id", nullable = false)
     private FichaTecnica fichaTecnica;
@@ -54,6 +61,27 @@ public class IngredientesPorFicha {
         this.fc = fc;
         this.custoUsado = custoUsado;
         this.custoKG = custoKG;
+        this.fichaTecnica = fichaTecnica;
+        this.ingrediente = ingrediente;
+        this.perfilNutricional = perfilNutricional;
+    }
+
+    public IngredientesPorFicha(Long id, String medidaCaseria, BigDecimal pb, BigDecimal pl, BigDecimal fc,
+                                BigDecimal custoUsado, BigDecimal custoKG, BigDecimal ptnCalculado, BigDecimal choCalculado,
+                                BigDecimal lipCalculado, BigDecimal sodioCalculado, BigDecimal gorduraSaturadaCalculada,
+                                FichaTecnica fichaTecnica, Ingrediente ingrediente, PerfilNutricional perfilNutricional) {
+        this.id = id;
+        this.medidaCaseira = medidaCaseria;
+        this.pb = pb;
+        this.pl = pl;
+        this.fc = fc;
+        this.custoUsado = custoUsado;
+        this.custoKG = custoKG;
+        this.ptnCalculado = ptnCalculado;
+        this.choCalculado = choCalculado;
+        this.lipCalculado = lipCalculado;
+        this.sodioCalculado = sodioCalculado;
+        this.gorduraSaturadaCalculada = gorduraSaturadaCalculada;
         this.fichaTecnica = fichaTecnica;
         this.ingrediente = ingrediente;
         this.perfilNutricional = perfilNutricional;
@@ -115,6 +143,46 @@ public class IngredientesPorFicha {
         this.custoKG = custoKG;
     }
 
+    public BigDecimal getPtnCalculado() {
+        return ptnCalculado;
+    }
+
+    public void setPtnCalculado(BigDecimal ptnCalculado) {
+        this.ptnCalculado = ptnCalculado;
+    }
+
+    public BigDecimal getChoCalculado() {
+        return choCalculado;
+    }
+
+    public void setChoCalculado(BigDecimal choCalculado) {
+        this.choCalculado = choCalculado;
+    }
+
+    public BigDecimal getLipCalculado() {
+        return lipCalculado;
+    }
+
+    public void setLipCalculado(BigDecimal lipCalculado) {
+        this.lipCalculado = lipCalculado;
+    }
+
+    public BigDecimal getSodioCalculado() {
+        return sodioCalculado;
+    }
+
+    public void setSodioCalculado(BigDecimal sodioCalculado) {
+        this.sodioCalculado = sodioCalculado;
+    }
+
+    public BigDecimal getGorduraSaturadaCalculada() {
+        return gorduraSaturadaCalculada;
+    }
+
+    public void setGorduraSaturadaCalculada(BigDecimal gorduraSaturadaCalculada) {
+        this.gorduraSaturadaCalculada = gorduraSaturadaCalculada;
+    }
+
     public FichaTecnica getFichaTecnica() {
         return fichaTecnica;
     }
@@ -143,12 +211,12 @@ public class IngredientesPorFicha {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         IngredientesPorFicha that = (IngredientesPorFicha) o;
-        return Objects.equals(id, that.id) && Objects.equals(medidaCaseira, that.medidaCaseira) && Objects.equals(pb, that.pb) && Objects.equals(pl, that.pl) && Objects.equals(fc, that.fc) && Objects.equals(custoUsado, that.custoUsado) && Objects.equals(custoKG, that.custoKG) && Objects.equals(fichaTecnica, that.fichaTecnica) && Objects.equals(ingrediente, that.ingrediente) && Objects.equals(perfilNutricional, that.perfilNutricional);
+        return Objects.equals(id, that.id) && Objects.equals(medidaCaseira, that.medidaCaseira) && Objects.equals(pb, that.pb) && Objects.equals(pl, that.pl) && Objects.equals(fc, that.fc) && Objects.equals(custoUsado, that.custoUsado) && Objects.equals(custoKG, that.custoKG) && Objects.equals(ptnCalculado, that.ptnCalculado) && Objects.equals(choCalculado, that.choCalculado) && Objects.equals(lipCalculado, that.lipCalculado) && Objects.equals(sodioCalculado, that.sodioCalculado) && Objects.equals(gorduraSaturadaCalculada, that.gorduraSaturadaCalculada) && Objects.equals(fichaTecnica, that.fichaTecnica) && Objects.equals(ingrediente, that.ingrediente) && Objects.equals(perfilNutricional, that.perfilNutricional);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, medidaCaseira, pb, pl, fc, custoUsado, custoKG, fichaTecnica, ingrediente, perfilNutricional);
+        return Objects.hash(id, medidaCaseira, pb, pl, fc, custoUsado, custoKG, ptnCalculado, choCalculado, lipCalculado, sodioCalculado, gorduraSaturadaCalculada, fichaTecnica, ingrediente, perfilNutricional);
     }
 
     @Override
@@ -161,6 +229,11 @@ public class IngredientesPorFicha {
                 ", fc=" + fc +
                 ", custoUsado=" + custoUsado +
                 ", custoKG=" + custoKG +
+                ", ptnCalculado=" + ptnCalculado +
+                ", choCalculado=" + choCalculado +
+                ", lipCalculado=" + lipCalculado +
+                ", sodioCalculado=" + sodioCalculado +
+                ", gorduraSaturadaCalculada=" + gorduraSaturadaCalculada +
                 ", fichaTecnica=" + fichaTecnica +
                 ", ingrediente=" + ingrediente +
                 ", perfilNutricional=" + perfilNutricional +

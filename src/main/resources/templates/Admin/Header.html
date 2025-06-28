@@ -324,12 +324,41 @@
 
           const currentPath = window.location.pathname;
           const navLinks = document.querySelectorAll("nav a");
+          let activeLinkFound = false;
 
           navLinks.forEach((link) => {
-            if (link.getAttribute("href") === currentPath) {
+            const href = link.getAttribute("href");
+
+            // Primeiro, verificar correspondência exata
+            if (href === currentPath) {
               link.classList.add("active");
+              activeLinkFound = true;
             }
           });
+
+          // Se não encontrou correspondência exata, verificar páginas relacionadas
+          if (!activeLinkFound) {
+            navLinks.forEach((link) => {
+              const href = link.getAttribute("href");
+
+              // Verificar se estamos em páginas relacionadas aos usuários
+              if (
+                href === "/admin/usuarios" &&
+                currentPath.includes("/admin/usuarios")
+              ) {
+                link.classList.add("active");
+                activeLinkFound = true;
+              }
+              // Verificar se estamos em páginas relacionadas aos estabelecimentos
+              else if (
+                href === "/admin/estabelecimentos" &&
+                currentPath.includes("/admin/estabelecimentos")
+              ) {
+                link.classList.add("active");
+                activeLinkFound = true;
+              }
+            });
+          }
         });
 
         function fazerLogout() {

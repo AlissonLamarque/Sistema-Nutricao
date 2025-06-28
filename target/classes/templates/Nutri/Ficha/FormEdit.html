@@ -418,56 +418,51 @@
                   >Sim</label
                 >
               </div>
+
+              <!-- Campos de água (aparecem quando checkbox marcado) -->
               <div
                 id="aguaInputs"
-                class="hidden w-full max-w-md mt-4"
+                class="hidden flex flex-col items-center mt-4"
                 th:classappend="${ficha.preparacao.qntdAgua != null && ficha.preparacao.qntdAgua > 0} ? '' : 'hidden'"
               >
-                <div class="grid grid-cols-3 gap-4 items-end">
-                  <div class="flex flex-col">
-                    <div class="flex items-center gap-1">
-                      <input
-                        type="number"
-                        step="0.01"
-                        class="w-full border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        onwheel="this.blur()"
-                        placeholder="quantidade"
-                        th:field="*{preparacao.qntdAgua}"
-                      />
-                      <span class="text-sm whitespace-nowrap">mL</span>
-                    </div>
-                  </div>
-
-                  <div class="flex flex-col">
-                    <label class="text-sm font-medium mb-1"
-                      >Sobrou(caldo)</label
-                    >
-                    <div class="flex items-center gap-1">
-                      <input
-                        type="number"
-                        step="0.01"
-                        class="w-full border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        onwheel="this.blur()"
-                        placeholder="0.00"
-                        th:field="*{preparacao.porcentAgua}"
-                      />
-                      <span class="text-sm whitespace-nowrap">%</span>
-                    </div>
-                  </div>
-
-                  <div class="flex flex-col">
+                <div class="flex gap-8 mb-2">
+                  <div class="flex items-center">
                     <input
                       type="number"
                       step="0.01"
-                      class="w-full border border-black rounded-md p-2 text-sm bg-gray-100 pointer-events-none"
-                      placeholder="fcc"
-                      th:value="${ficha.preparacao.fcc != null ? ficha.preparacao.fcc : ''}"
-                      name="preparacao.fcc"
-                      readonly
-                      tabindex="-1"
+                      class="w-28 border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      onwheel="this.blur()"
+                      placeholder="quantidade"
+                      th:field="*{preparacao.qntdAgua}"
                     />
+                    <span class="text-sm whitespace-nowrap ml-1">mL</span>
+                  </div>
+                  <div class="flex items-center">
+                    <input
+                      type="number"
+                      step="0.01"
+                      class="w-28 border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      onwheel="this.blur()"
+                      placeholder="0.00"
+                      th:field="*{preparacao.porcentAgua}"
+                    />
+                    <span class="text-sm whitespace-nowrap ml-1">%</span>
                   </div>
                 </div>
+              </div>
+
+              <!-- Campo FCC (sempre visível) -->
+              <div class="mt-2 flex flex-col items-center">
+                <input
+                  type="number"
+                  step="0.01"
+                  class="w-28 border border-black rounded-md p-2 text-sm bg-gray-100 pointer-events-none"
+                  placeholder="fcc"
+                  th:value="${ficha.preparacao.fcc != null ? ficha.preparacao.fcc : ''}"
+                  name="preparacao.fcc"
+                  readonly
+                  tabindex="-1"
+                />
               </div>
             </div>
           </div>

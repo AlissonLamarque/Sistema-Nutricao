@@ -213,12 +213,41 @@
         document.addEventListener("DOMContentLoaded", function () {
           const currentPath = window.location.pathname;
           const navLinks = document.querySelectorAll("nav a");
+          let activeLinkFound = false;
 
           navLinks.forEach((link) => {
-            if (link.getAttribute("href") === currentPath) {
+            const href = link.getAttribute("href");
+
+            // Primeiro, verificar correspondência exata
+            if (href === currentPath) {
               link.classList.add("active");
+              activeLinkFound = true;
             }
           });
+
+          // Se não encontrou correspondência exata, verificar páginas relacionadas
+          if (!activeLinkFound) {
+            navLinks.forEach((link) => {
+              const href = link.getAttribute("href");
+
+              // Verificar se estamos em páginas relacionadas às fichas
+              if (
+                href === "/producao/fichas" &&
+                currentPath.includes("/producao/fichas")
+              ) {
+                link.classList.add("active");
+                activeLinkFound = true;
+              }
+              // Verificar se estamos em páginas relacionadas às refeições
+              else if (
+                href === "/producao/refeicoes" &&
+                currentPath.includes("/producao/refeicoes")
+              ) {
+                link.classList.add("active");
+                activeLinkFound = true;
+              }
+            });
+          }
 
           // User dropdown
           const userBtn = document.getElementById("userBtn");

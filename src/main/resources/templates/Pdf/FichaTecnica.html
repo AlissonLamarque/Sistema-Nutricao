@@ -296,11 +296,11 @@
               Banana-prata madura
             </td>
             <td th:text="${ingrediente.pl()} + ' g'">115 g</td>
-            <td th:text="${ingrediente.ingrediente().ptn()} + ' g'">1,3 g</td>
-            <td th:text="${ingrediente.ingrediente().cho()} + ' g'">29,8 g</td>
-            <td th:text="${ingrediente.ingrediente().lip()} + ' g'">0,3 g</td>
-            <td th:text="${ingrediente.ingrediente().sodio()} + ' mg'">0 mg</td>
-            <td th:text="${ingrediente.ingrediente().gorduraSaturada()} + ' g'">
+            <td th:text="${ingrediente.ptnCalculado()} + ' g'">1,3 g</td>
+            <td th:text="${ingrediente.choCalculado()} + ' g'">29,8 g</td>
+            <td th:text="${ingrediente.lipCalculado()} + ' g'">0,3 g</td>
+            <td th:text="${ingrediente.sodioCalculado()} + ' mg'">0 mg</td>
+            <td th:text="${ingrediente.gorduraSaturadaCalculada()} + ' g'">
               0,1 g
             </td>
           </tr>

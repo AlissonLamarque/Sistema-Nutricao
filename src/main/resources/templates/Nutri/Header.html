@@ -292,12 +292,64 @@
         document.addEventListener("DOMContentLoaded", function () {
           const currentPath = window.location.pathname;
           const navLinks = document.querySelectorAll("nav a");
+          let activeLinkFound = false;
+
+          console.log("Current path:", currentPath);
 
           navLinks.forEach((link) => {
-            if (link.getAttribute("href") === currentPath) {
+            const href = link.getAttribute("href");
+
+            // Primeiro, verificar correspondência exata
+            if (href === currentPath) {
+              console.log("Exact match found for:", href);
               link.classList.add("active");
+              activeLinkFound = true;
             }
           });
+
+          // Se não encontrou correspondência exata, verificar páginas relacionadas
+          if (!activeLinkFound) {
+            navLinks.forEach((link) => {
+              const href = link.getAttribute("href");
+
+              // Verificar se estamos em páginas relacionadas às fichas
+              if (
+                href === "/nutricionista/fichas" &&
+                currentPath.includes("/nutricionista/fichas")
+              ) {
+                console.log("Fichas related page found:", currentPath);
+                link.classList.add("active");
+                activeLinkFound = true;
+              }
+              // Verificar se estamos na página de criar ingrediente
+              else if (
+                href === "/nutricionista/ingredientes/novo" &&
+                currentPath.includes("/nutricionista/ingredientes/novo")
+              ) {
+                console.log("Criar ingrediente page found:", currentPath);
+                link.classList.add("active");
+                activeLinkFound = true;
+              }
+              // Verificar se estamos em páginas relacionadas aos ingredientes
+              else if (
+                href === "/nutricionista/ingredientes" &&
+                currentPath.includes("/nutricionista/ingredientes")
+              ) {
+                console.log("Ingredientes related page found:", currentPath);
+                link.classList.add("active");
+                activeLinkFound = true;
+              }
+              // Verificar se estamos em páginas relacionadas às refeições
+              else if (
+                href === "/nutricionista/refeicoes" &&
+                currentPath.includes("/nutricionista/refeicoes")
+              ) {
+                console.log("Refeicoes related page found:", currentPath);
+                link.classList.add("active");
+                activeLinkFound = true;
+              }
+            });
+          }
 
           // User dropdown
           const userBtn = document.getElementById("userBtn");

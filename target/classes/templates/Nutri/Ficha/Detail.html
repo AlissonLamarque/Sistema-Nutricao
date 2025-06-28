@@ -246,40 +246,40 @@
                   <tr th:each="ingrediente : ${ficha.ingredientes()}">
                     <td
                       class="border p-2"
-                      th:text="${ingrediente.ingrediente().nome()}"
+                      th:text="${ingrediente.ingrediente.nome}"
                     >
                       Banana-prata madura
                     </td>
-                    <td class="border p-2" th:text="${ingrediente.pl()} + ' g'">
+                    <td class="border p-2" th:text="${ingrediente.pl} + ' g'">
                       115 g
                     </td>
                     <td
                       class="border p-2"
-                      th:text="${ingrediente.ingrediente().ptn()} + ' g'"
+                      th:text="${ingrediente.ptnCalculado} + ' g'"
                     >
                       1,3 g
                     </td>
                     <td
                       class="border p-2"
-                      th:text="${ingrediente.ingrediente().cho()} + ' g'"
+                      th:text="${ingrediente.choCalculado} + ' g'"
                     >
                       29,8 g
                     </td>
                     <td
                       class="border p-2"
-                      th:text="${ingrediente.ingrediente().lip()} + ' g'"
+                      th:text="${ingrediente.lipCalculado} + ' g'"
                     >
                       0,3 g
                     </td>
                     <td
                       class="border p-2"
-                      th:text="${ingrediente.ingrediente().sodio()} + ' mg'"
+                      th:text="${ingrediente.sodioCalculado} + ' mg'"
                     >
                       0 mg
                     </td>
                     <td
                       class="border p-2"
-                      th:text="${ingrediente.ingrediente().gorduraSaturada()} + ' g'"
+                      th:text="${ingrediente.gorduraSaturadaCalculada} + ' g'"
                     >
                       0,1 g
                     </td>

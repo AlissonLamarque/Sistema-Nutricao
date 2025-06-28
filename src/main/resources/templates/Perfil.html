@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+    <script th:src="@{/Scripts/ScriptPerfil.js}"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0% via-[#b9dfa3] via-15% via-[#e9ffd0] via-20% to-white to-30% min-h-screen flex flex-col justify-between"
+  >
+    <header class="w-full flex items-center justify-between p-4 text-white">
+      <div class="flex items-center space-x-4">
+        <a>
+          <img
+            src="/imagens/Logo.png"
+            alt="Logo"
+            class="w-20 h-24 md:w-20 md:h-20"
+          />
+        </a>
+      </div>
+      <div class="relative">
+        <button id="userBtn" class="text-white focus:outline-none">
+          <img
+            th:src="${usuarioLogado != null && usuarioLogado.caminhoImagem != null} ? @{/} + ${usuarioLogado.id} + '/imagem' : @{/imagens/UserIcon.png}"
+            alt="Imagem de Perfil"
+            class="w-20 h-20 rounded-full object-cover border-4 border-[#297e1d] shadow-lg"
+          />
+        </button>
+
+        <div
+          id="userDropdown"
+          class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl z-50 border border-gray-200 overflow-hidden transition-all duration-300 ease-in-out transform origin-top-right"
+        >
+          <div
+            class="px-4 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200"
+          >
+            <div class="text-center">
+              <strong
+                class="text-lg font-semibold text-gray-800"
+                th:text="${Username}"
+                >Usuário</strong
+              >
+            </div>
+          </div>
+
+          <a
+            th:href="@{/perfil}"
+            class="w-full text-left px-4 py-3 flex items-center hover:bg-gray-50 text-gray-700 transition-colors duration-200 group border-b border-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-3 text-gray-400 group-hover:text-green-500 transition-colors"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              />
+            </svg>
+            <span class="group-hover:text-green-600 transition-colors"
+              >Editar Perfil</span
+            >
+          </a>
+
+          <button
+            onclick="fazerLogout()"
+            class="w-full text-left px-4 py-3 flex items-center hover:bg-gray-50 text-gray-700 transition-colors duration-200 group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-3 text-gray-400 group-hover:text-red-500 transition-colors"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            <span class="group-hover:text-red-600 transition-colors">Sair</span>
+          </button>
+
+          <div
+            class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600"
+          ></div>
+        </div>
+      </div>
+    </header>
+
+    <main
+      class="flex-1 flex items-center justify-center w-full px-4 py-8 md:py-0"
+    >
+      <div
+        class="bg-[#599e4a] rounded-3xl w-full max-w-2xl shadow-xl shadow-green-950/50 p-4 sm:p-6 md:p-8"
+      >
+        <div class="flex flex-col items-center">
+          <div class="flex items-center justify-center w-full mb-6 relative">
+            <button
+              onclick="history.back()"
+              class="absolute left-0 text-black hover:text-green-900 transform duration-200 hover:scale-110 p-2"
+              title="Voltar"
+            >
+              <i class="fa-solid fa-arrow-left text-2xl"></i>
+            </button>
+
+            <h1 class="text-2xl font-bold text-center">Meu Perfil</h1>
+          </div>
+
+          <form
+            th:action="@{/editar}"
+            th:object="${usuario}"
+            method="post"
+            enctype="multipart/form-data"
+            class="w-full max-w-md"
+          >
+            <!-- Seção da imagem de perfil -->
+            <div class="flex flex-col items-center mb-6">
+              <!-- Exibe a imagem atual ou placeholder -->
+              <div class="relative mb-4">
+                <img
+                  th:src="${usuario.caminhoImagem != null} ?
+                            @{${usuario.id} + '/imagem'} :
+                            @{/imagens/UserIcon.png}"
+                  alt="Imagem de perfil"
+                  class="w-32 h-32 rounded-full object-cover border-4 border-green-200"
+                />
+
+                <!-- Ícone de edição sobreposto -->
+                <label
+                  for="imagemPerfil"
+                  class="absolute bottom-0 right-0 text-white p-2 rounded-full cursor-pointer transition border border-black bg-[#297e1d] text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </label>
+              </div>
+
+              <!-- Input de arquivo (escondido) -->
+              <input
+                type="file"
+                id="imagemPerfil"
+                name="imagemPerfil"
+                accept="image/*"
+                class="hidden"
+                onchange="previewImagem(this)"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 mb-6">
+              <div class="text-center">
+                <h3 class="text-xl font-bold text-black mb-3">Nome</h3>
+                <div class="flex items-center justify-center gap-3">
+                  <span
+                    id="username-view"
+                    class="p-3 border border-transparent text-lg font-medium"
+                    th:text="${usuario.username}"
+                    >Nome do Usuário</span
+                  >
+                  <input
+                    type="text"
+                    id="username-edit"
+                    th:field="*{username}"
+                    class="hidden w-full p-3 border rounded text-center text-lg font-medium"
+                  />
+                  <button
+                    id="username-edit-btn"
+                    class="text-2xl text-black transform duration-200 hover:text-green-900 hover:scale-105"
+                  >
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                  <button
+                    id="username-save"
+                    class="text-2xl hidden text-[#297e1d] transform duration-200 hover:text-green-900 hover:scale-105"
+                  >
+                    <i class="fa-solid fa-circle-check"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Campo Email -->
+              <div class="text-center">
+                <h3 class="text-xl font-bold text-black mb-3">Email</h3>
+                <div class="flex items-center justify-center gap-3">
+                  <span
+                    id="email-view"
+                    class="p-3 border border-transparent text-lg font-medium"
+                    th:text="${usuario.email}"
+                    >email@exemplo.com</span
+                  >
+                  <input
+                    type="email"
+                    id="email-edit"
+                    th:field="*{email}"
+                    class="hidden w-full p-3 border rounded text-center text-lg font-medium"
+                  />
+                  <button
+                    id="email-edit-btn"
+                    class="text-2xl text-black transform duration-200 hover:text-green-900 hover:scale-105"
+                  >
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                  <button
+                    id="email-save"
+                    class="text-2xl hidden text-[#297e1d] transform duration-200 hover:text-green-900 hover:scale-105"
+                  >
+                    <i class="fa-solid fa-circle-check"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Campo Senha -->
+              <div class="text-center">
+                <h3 class="text-xl font-bold text-black mb-3">Senha</h3>
+                <div class="flex items-center justify-center gap-3">
+                  <span
+                    id="senha-view"
+                    class="p-3 border border-transparent text-lg font-medium"
+                    >••••••••</span
+                  >
+                  <button
+                    id="senha-edit-btn"
+                    class="text-2xl text-black transform duration-200 hover:text-green-900 hover:scale-105"
+                  >
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                  <button
+                    id="senha-save"
+                    class="text-2xl hidden text-[#297e1d] transform duration-200 hover:text-green-900 hover:scale-105"
+                  >
+                    <i class="fa-solid fa-circle-check"></i>
+                  </button>
+                  <button
+                    id="senha-cancel"
+                    class="text-2xl hidden text-red-600 hover:text-red-800"
+                  >
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+
+                <!-- Campos de senha (inicialmente ocultos) -->
+                <div id="senha-edit-fields" class="hidden mt-4 space-y-3">
+                  <div>
+                    <label class="block text-black mb-1 text-sm"
+                      >Nova Senha</label
+                    >
+                    <input
+                      type="password"
+                      id="novaSenhaInput"
+                      class="w-full p-2 border rounded text-center"
+                      placeholder="Digite a nova senha"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-black mb-1 text-sm"
+                      >Confirme a Nova Senha</label
+                    >
+                    <input
+                      type="password"
+                      id="confirmarNovaSenhaInput"
+                      class="w-full p-2 border rounded text-center"
+                      placeholder="Confirme a nova senha"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-black mb-1 text-sm"
+                      >Senha Atual</label
+                    >
+                    <input
+                      type="password"
+                      id="senhaAtualInput"
+                      class="w-full p-2 border rounded text-center"
+                      placeholder="Digite sua senha atual"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-center space-x-4 mt-6">
+              <button
+                type="submit"
+                class="px-3 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+              >
+                Salvar Alterações
+              </button>
+            </div>
+
+            <input type="hidden" name="novaSenha" id="novaSenha" />
+            <input
+              type="hidden"
+              name="confirmarNovaSenha"
+              id="confirmarNovaSenha"
+            />
+            <input type="hidden" name="senhaAtual" id="senhaAtual" />
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <div th:replace="~{Footer :: main-footer}"></div>
+  </body>
+</html>

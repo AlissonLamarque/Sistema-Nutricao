@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Ingredientes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      @media (min-width: 810px) {
+        .cabecalho-fichas {
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: flex-start !important;
+          position: relative;
+        }
+        .cabecalho-fichas-titulo {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-bottom: 0 !important;
+          width: max-content;
+        }
+        .cabecalho-fichas-botoes {
+          margin-top: 0 !important;
+          margin-left: auto !important;
+        }
+      }
+      @media (min-width: 781px) {
+        .pesquisa-form {
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        .pesquisa-form-campo {
+          width: auto !important;
+          margin-bottom: 0 !important;
+        }
+        .pesquisa-form-botao {
+          margin-top: 0 !important;
+        }
+      }
+      @media (max-width: 780px) {
+        .pesquisa-form {
+          flex-direction: column !important;
+          align-items: stretch !important;
+        }
+        .pesquisa-form-campo {
+          width: 100% !important;
+          margin-bottom: 1rem !important;
+        }
+        .pesquisa-form-botao {
+          margin-top: 1rem !important;
+          width: 100% !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col"
+  >
+    <div th:replace="~{Nutri/Header :: main-header}"></div>
+    <div class="flex-1 flex items-center justify-center w-full">
+      <main
+        class="bg-[#599e4a] rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 w-[95%] max-w-6xl shadow-xl shadow-green-950/50 min-h-[500px] flex flex-col items-center mb-8"
+      >
+        <div class="max-w-5xl w-full">
+          <!-- Cabeçalho com título e botões -->
+          <div class="flex flex-col items-center mb-6 cabecalho-fichas">
+            <h1
+              id="tituloPagina"
+              class="text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center mb-4 cabecalho-fichas-titulo"
+            >
+              <span
+                th:text="${view == 'taco'} ? 'Tabela Taco' : 'Seus Ingredientes'"
+              ></span>
+            </h1>
+            <div class="flex gap-4 mt-2 sm:mt-0 cabecalho-fichas-botoes">
+              <a
+                id="tacoButton"
+                th:with="isTacoView=${view == 'taco'}"
+                th:href="${isTacoView} ? '/nutricionista/ingredientes?view=meus' : '/nutricionista/ingredientes/usuario4?view=taco'"
+                class="px-3 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-base sm:text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+              >
+                <span
+                  th:text="${isTacoView} ? 'Seus Ingredientes' : 'TACO'"
+                ></span>
+              </a>
+              <button
+                type="button"
+                id="toggleStatusBtn2"
+                th:if="${view != 'taco'}"
+                th:data-current-status="${statusAtual != null ? statusAtual : 'INATIVA'}"
+                class="px-3 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-base sm:text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+              >
+                <span
+                  th:text="${statusAtual != null && statusAtual.name() == 'ATIVA'} ? 'Arquivados' : 'Desarquivados'"
+                ></span>
+              </button>
+            </div>
+          </div>
+          <!-- Formulário de pesquisa -->
+          <form
+            id="pesquisaForm"
+            method="get"
+            class="p-4 sm:p-6 rounded-lg mb-6 sm:mb-8 mx-auto max-w-4xl"
+            th:unless="${statusAtual?.name() == 'INATIVA'}"
+          >
+            <div
+              class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 md:justify-center"
+            >
+              <div class="w-full sm:w-auto order-1 sm:order-none">
+                <select
+                  id="campoPesquisa"
+                  class="w-full sm:w-72 p-2 sm:p-3 border border-black rounded-lg text-base sm:text-lg text-black shadow-xl shadow-green-950/50 focus:outline-none focus:ring-2 focus:ring-[#297e1d] focus:border-[#297e1d]"
+                >
+                  <option disabled selected>Selecionar campo</option>
+                  <option value="nome">Nome</option>
+                  <option value="PTN">PTN</option>
+                  <option value="CHO">CHO</option>
+                  <option value="LIP">LIP</option>
+                  <option value="sodio">Sódio</option>
+                  <option value="gorduras">Gorduras Saturadas</option>
+                </select>
+              </div>
+
+              <div class="w-full sm:w-auto flex gap-2 order-3 sm:order-none">
+                <input
+                  type="text"
+                  id="valorPesquisa"
+                  placeholder="Valor do campo"
+                  class="w-full sm:w-72 p-2 sm:p-3 border border-black rounded-lg text-base sm:text-lg placeholder-black shadow-xl shadow-green-950/50 focus:outline-none focus:ring-2 focus:ring-[#297e1d] focus:border-[#297e1d]"
+                />
+                <button
+                  type="button"
+                  id="btnPesquisar"
+                  class="px-3 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-base sm:text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105 sm:ml-2"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+            <input type="hidden" id="viewType" th:value="${view}" />
+          </form>
+
+          <div class="space-y-4">
+            <div
+              th:each="ingrediente : ${ingredientes}"
+              class="bg-[#89be77] p-6 rounded-lg sm:rounded-full shadow-xl shadow-green-950/50 border border-black"
+            >
+              <div
+                th:class="${view == 'taco'} ?
+                  'hidden md:grid grid-cols-10 items-center gap-4' :
+                  'hidden md:grid grid-cols-12 items-center gap-4'"
+              >
+                <div
+                  class="relative group inline-block"
+                  tabindex="0"
+                  th:classappend="${view == 'taco'} ?
+                        ' col-span-3 min-w-[150px] max-w-[250px]' :
+                        ' col-span-2 min-w-[150px] max-w-[200px]'"
+                >
+                  <span
+                    class="text-xl font-semibold text-black truncate block cursor-pointer"
+                    th:text="${ingrediente.nome}"
+                  ></span>
+                  <div
+                    class="absolute z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus:opacity-100 group-focus:visible transition-opacity duration-200 ease-in-out bg-[#e9ffd0] text-black px-3 py-2 rounded-md shadow-lg border border-gray-200 text-base font-normal whitespace-normal w-auto max-w-xs left-0 bottom-full mb-2"
+                  >
+                    <span th:text="${ingrediente.nome}"></span>
+                  </div>
+                </div>
+
+                <div
+                  th:class="${view == 'taco'} ?
+                      'col-span-7 grid grid-cols-5 gap-4' :
+                      'col-span-7 grid grid-cols-5 gap-4'"
+                >
+                  <div class="text-center">
+                    <div class="text-sm text-gray-700">PTN</div>
+                    <div
+                      class="font-semibold"
+                      th:text="${ingrediente.ptn} + 'g'"
+                    />
+                  </div>
+                  <div class="text-center">
+                    <div class="text-sm text-gray-700">CHO</div>
+                    <div
+                      class="font-semibold"
+                      th:text="${ingrediente.cho} + 'g'"
+                    />
+                  </div>
+                  <div class="text-center">
+                    <div class="text-sm text-gray-700">LIP</div>
+                    <div
+                      class="font-semibold"
+                      th:text="${ingrediente.lip} + 'g'"
+                    />
+                  </div>
+                  <div class="text-center">
+                    <div class="text-sm text-gray-700">Sódio</div>
+                    <div
+                      class="font-semibold"
+                      th:text="${ingrediente.sodio} + 'mg'"
+                    />
+                  </div>
+                  <div class="text-center">
+                    <div class="text-sm text-gray-700">Gorduras</div>
+                    <div
+                      class="font-semibold"
+                      th:text="${ingrediente.gorduraSaturada} + 'g'"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  th:if="${view != null and view != 'taco'}"
+                  class="col-span-3 flex justify-end space-x-2"
+                >
+                  <a
+                    th:href="@{/nutricionista/ingredientes/editar/{id}(id=${ingrediente.id})}"
+                    class="px-3 py-1 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50 text-black text-sm hover:bg-[#b9dfa3] transform duration-200 hover:scale-105"
+                  >
+                    Editar
+                  </a>
+                  <form
+                    th:action="@{/nutricionista/ingredientes/atualiza-status/{id}(id=${ingrediente.id})}"
+                    method="post"
+                  >
+                    <button
+                      type="submit"
+                      class="px-3 py-1 border bg-[#e9ffd0] shadow-xl shadow-green-950/50 border-black rounded-lg text-sm hover:bg-[#b9dfa3] transform duration-200 hover:scale-105"
+                    >
+                      <span
+                        th:text="${ingrediente.status.name() == 'ATIVA'} ? 'Arquivar' : 'Desarquivar'"
+                      ></span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <div class="md:hidden space-y-3">
+                <div class="relative group inline-block w-full" tabindex="0">
+                  <span
+                    class="font-semibold text-lg truncate block cursor-pointer w-full max-w-full"
+                    th:text="${ingrediente.nome}"
+                  ></span>
+                  <div
+                    class="absolute z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus:opacity-100 group-focus:visible transition-opacity duration-200 ease-in-out bg-[#e9ffd0] text-black px-3 py-2 rounded-md shadow-lg border border-gray-200 text-base font-normal whitespace-normal w-auto max-w-xs left-0 bottom-full mb-2"
+                  >
+                    <span th:text="${ingrediente.nome}"></span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                  <div>
+                    <div class="text-sm text-gray-700">PTN</div>
+                    <div th:text="${ingrediente.ptn} + 'g'" />
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-700">CHO</div>
+                    <div th:text="${ingrediente.cho} + 'g'" />
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-700">LIP</div>
+                    <div th:text="${ingrediente.lip} + 'g'" />
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-700">Sódio</div>
+                    <div th:text="${ingrediente.sodio} + 'mg'" />
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-700">Gorduras</div>
+                    <div th:text="${ingrediente.gorduraSaturada} + 'g'" />
+                  </div>
+                </div>
+
+                <div
+                  class="flex space-x-2 pt-2"
+                  th:if="${view != null and view != 'taco'}"
+                >
+                  <a
+                    th:href="@{/nutricionista/ingredientes/editar/{id}(id=${ingrediente.id})}"
+                    class="flex-1 text-center px-3 py-1 border border-black rounded-lg bg-white text-black text-sm hover:bg-gray-100 transition"
+                  >
+                    Editar
+                  </a>
+                  <form
+                    th:action="@{/nutricionista/ingredientes/atualiza-status/{id}(id=${ingrediente.id})}"
+                    method="post"
+                    class="flex-1"
+                  >
+                    <button
+                      type="submit"
+                      class="w-full px-3 py-1 border bg-white border-black rounded-lg text-sm transition"
+                    >
+                      <span
+                        th:text="${ingrediente.status.name() == 'ATIVA'} ? 'Arquivar' : 'Desarquivar'"
+                      ></span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            th:if="${ingredientes != null and ingredientes.empty}"
+            class="text-black text-xl text-center py-10"
+          >
+            Nenhum resultado encontrado para a pesquisa.
+          </div>
+        </div>
+      </main>
+    </div>
+    <div th:replace="~{Footer :: main-footer}"></div>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+    <script th:src="@{/Scripts/Nutri/ScriptListIngrediente.js}"></script>
+  </body>
+</html>

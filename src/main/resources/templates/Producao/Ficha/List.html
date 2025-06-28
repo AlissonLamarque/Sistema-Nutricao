@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suas Fichas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col justify-between"
+  >
+    <div th:replace="~{Producao/Header :: main-header}"></div>
+    <main
+      class="mt-16 rounded-3xl p-4 sm:p-10 w-[95%] max-w-6xl mx-auto flex justify-around flex-wrap gap-8 min-h-[500px]"
+    >
+      <div class="max-w-5xl mx-auto w-full">
+        <div class="flex items-center justify-between mb-6">
+          <h1
+            class="absolute left-1/2 transform -translate-x-1/2 text-3xl sm:text-4xl font-bold text-black"
+          >
+            Suas Fichas
+          </h1>
+        </div>
+
+        <form
+          id="pesquisaForm"
+          method="get"
+          class="p-4 sm:p-6 rounded-lg mb-8 mx-auto max-w-4xl"
+        >
+          <div
+            class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 justify-center"
+          >
+            <div class="w-full sm:w-auto">
+              <select
+                id="campoPesquisa"
+                class="w-full sm:w-72 p-3 border border-black rounded-lg text-lg text-black"
+              >
+                <option value="" disabled selected>Selecionar campo</option>
+                <option value="custoPerCapita">Custo per capita</option>
+                <option value="custoTotal">Custo total</option>
+                <option value="por-nome">Nome</option>
+                <option value="por-categoria">Categoria</option>
+                <option value="por-rendimento">Rendimento</option>
+                <option value="por-numero">Número</option>
+                <option value="vtc">VTC</option>
+                <option value="gramasPTN">Gramas de PTN</option>
+                <option value="gramasCHO">Gramas de CHO</option>
+                <option value="gramasLIP">Gramas de LIP</option>
+                <option value="gramasSodio">Gramas de Sódio</option>
+                <option value="gramasSaturada">
+                  Gramas de Gordura Saturada
+                </option>
+              </select>
+            </div>
+
+            <div class="w-full sm:w-auto flex gap-2">
+              <input
+                type="text"
+                id="valorPesquisa"
+                placeholder="Valor do campo"
+                class="w-full sm:w-72 p-3 border border-black rounded-lg text-lg placeholder-black"
+              />
+              <button
+                type="button"
+                id="btnPesquisar"
+                class="px-3 sm:px-4 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-base sm:text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="space-y-6">
+          <div
+            th:if="${not fichas.empty}"
+            th:each="ficha : ${fichas}"
+            class="bg-[#89be77] p-4 sm:p-6 rounded-lg sm:rounded-full shadow-xl shadow-green-950/50 border border-black"
+          >
+            <div
+              class="flex flex-col sm:flex-row items-center justify-between relative"
+            >
+              <div class="sm:flex-1 text-center sm:text-left mb-2 sm:mb-0">
+                <span
+                  class="text-xl sm:text-2xl font-semibold text-black"
+                  th:text="${ficha.preparacao.nome}"
+                />
+              </div>
+
+              <div
+                class="sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2 mb-2 sm:mb-0"
+              >
+                <span
+                  class="text-lg font-semibold text-black"
+                  th:text="${ficha.preparacao.categoria.nome}"
+                />
+              </div>
+
+              <div class="sm:absolute sm:left-2/3 sm:ml-16 mb-2 sm:mb-0">
+                <span class="text-lg font-semibold text-black"
+                  >Nº: <span th:text="${ficha.preparacao.numero}"></span
+                ></span>
+              </div>
+
+              <div class="sm:flex-shrink-0">
+                <a
+                  th:href="@{/producao/fichas/{id}(id=${ficha.id})}"
+                  class="inline-block px-4 py-1.5 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50 text-black font-medium text-lg transform transition-all duration-200 hover:bg-[#b9dfa3] hover:scale-105"
+                >
+                  Ver Ficha
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div
+            th:if="${fichas != null and fichas.empty}"
+            class="text-white text-xl text-center py-10"
+          >
+            Nenhum resultado encontrado para a pesquisa.
+          </div>
+        </div>
+      </div>
+      <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+      <script th:src="@{/Scripts/Producao/ScriptListFicha.js}"></script>
+    </main>
+    <div th:replace="~{Footer :: main-footer}"></div>
+  </body>
+</html>

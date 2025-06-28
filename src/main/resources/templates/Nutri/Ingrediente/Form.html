@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title
+      th:text="${ingrediente.id() != null} ? 'Editar Ingrediente' : 'Novo Ingrediente'"
+    ></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col"
+  >
+    <div th:replace="~{Nutri/Header :: main-header}"></div>
+    <main class="flex-1 flex items-center justify-center">
+      <div
+        class="bg-[#599e4a] rounded-3xl p-4 md:p-6 lg:p-10 px-4 w-[90%] sm:w-full max-w-xl shadow-xl shadow-green-950/50 flex justify-around flex-wrap gap-4 md:gap-8 min-h-[400px]"
+      >
+        <h1
+          class="text-4xl md:text-4xl font-bold mb-4 md:mb-6 text-center w-full"
+          th:text="${ingrediente.id() != null} ? 'Edição de Ingrediente' : 'Cadastro de Ingrediente'"
+        ></h1>
+
+        <form
+          th:action="${ingrediente.id() != null}
+                   ? @{/nutricionista/ingredientes/editar/{id}(id=${ingrediente.id()})}
+                   : @{/nutricionista/ingredientes/novo}"
+          th:object="${ingrediente}"
+          method="post"
+          class="rounded-lg p-4 md:p-6 w-full"
+        >
+          <div class="mb-4">
+            <input
+              type="text"
+              id="nome"
+              placeholder="Nome"
+              name="nome"
+              th:value="${ingrediente.nome()}"
+              class="shadow appearance-none border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base"
+              required
+            />
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 md:gap-4 mb-4">
+            <div>
+              <!-- Mobile -->
+              <input
+                type="number"
+                step="0.01"
+                id="ptn"
+                th:placeholder="'PTN(g)'"
+                name="ptn"
+                th:value="${ingrediente.ptn()}"
+                class="block sm:hidden shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onwheel="this.blur()"
+                required
+              />
+              <!-- Desktop -->
+              <input
+                type="number"
+                step="0.01"
+                id="ptn"
+                th:placeholder="'Proteína(g)'"
+                name="ptn"
+                th:value="${ingrediente.ptn()}"
+                class="hidden sm:block shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onwheel="this.blur()"
+                required
+              />
+            </div>
+            <div>
+              <!-- Mobile -->
+              <input
+                type="number"
+                step="0.01"
+                id="cho"
+                th:placeholder="'CHO(g)'"
+                name="cho"
+                th:value="${ingrediente.cho()}"
+                class="block sm:hidden shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onwheel="this.blur()"
+                required
+              />
+              <!-- Desktop -->
+              <input
+                type="number"
+                step="0.01"
+                id="cho"
+                th:placeholder="'Carboidrato(g)'"
+                name="cho"
+                th:value="${ingrediente.cho()}"
+                class="hidden sm:block shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onwheel="this.blur()"
+                required
+              />
+            </div>
+            <div>
+              <!-- Mobile -->
+              <input
+                type="number"
+                step="0.01"
+                id="lip"
+                th:placeholder="'LIP(g)'"
+                name="lip"
+                th:value="${ingrediente.lip()}"
+                class="block sm:hidden shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onwheel="this.blur()"
+                required
+              />
+              <!-- Desktop -->
+              <input
+                type="number"
+                step="0.01"
+                id="lip"
+                th:placeholder="'Lipidios(g)'"
+                name="lip"
+                th:value="${ingrediente.lip()}"
+                class="hidden sm:block shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onwheel="this.blur()"
+                required
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 md:gap-4 mb-4">
+            <div>
+              <input
+                type="number"
+                step="0.01"
+                id="sodio"
+                th:placeholder="'Sódio(g)'"
+                name="sodio"
+                th:value="${ingrediente.sodio()}"
+                class="shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onwheel="this.blur()"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="number"
+                step="0.01"
+                id="gorduraSaturada"
+                th:placeholder="'Gordura(g)'"
+                name="gorduraSaturada"
+                th:value="${ingrediente.gorduraSaturada()}"
+                class="shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                onwheel="this.blur()"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center">
+            <button
+              type="submit"
+              class="bg-[#297e1d] hover:bg-green-900 text-white border mt-4 border-black font-bold py-2 px-6 sm:px-10 md:px-16 rounded focus:outline-none focus:shadow-outline w-full max-w-xs mx-auto text-sm shadow-xl shadow-green-950/50 transform duration-200 hover:scale-105"
+            >
+              <span
+                th:text="${ingrediente.id() != null} ? 'Atualizar' : 'Salvar'"
+              ></span>
+            </button>
+          </div>
+          <input
+            type="hidden"
+            name="status"
+            th:value="${T(com.example.sistemanutricao.model.Status).ATIVA}"
+          />
+        </form>
+        <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+      </div>
+    </main>
+    <div th:replace="~{Footer :: main-footer}"></div>
+  </body>
+</html>

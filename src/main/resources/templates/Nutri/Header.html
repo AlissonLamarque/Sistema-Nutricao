@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+  </head>
+  <body>
+    <header
+      th:fragment="main-header"
+      class="w-full flex flex-col text-white relative"
+    >
+      <div class="flex items-center justify-between p-4">
+        <a
+          href="/nutricionista"
+          class="flex-shrink-0 transition-all duration-300"
+        >
+          <img
+            src="/imagens/Logo.png"
+            alt="Logo"
+            class="w-20 h-24 md:w-20 md:h-20"
+          />
+        </a>
+        <nav
+          class="hidden [@media(min-width:1000px)]:flex absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+        >
+          <div
+            class="flex items-center space-x-4 [@media(min-width:900px)]:space-x-6 [@media(min-width:1024px)]:space-x-8"
+          >
+            <a
+              href="/nutricionista/fichas/nova"
+              class="relative group text-lg text-black font-medium py-2"
+            >
+              Criar Ficha
+              <span
+                class="absolute left-1/2 -translate-x-1/2 -bottom-1 h-0.5 w-0 bg-green-500 transition-all duration-300 group-hover:w-[80%] group-[.active]:w-[80%]"
+              ></span>
+            </a>
+            <a
+              href="/nutricionista/fichas"
+              class="relative group text-lg text-black font-medium py-2"
+            >
+              Suas Fichas
+              <span
+                class="absolute left-1/2 -translate-x-1/2 -bottom-1 h-0.5 w-0 bg-green-500 transition-all duration-300 group-hover:w-[80%] group-[.active]:w-[80%]"
+              ></span>
+            </a>
+            <a
+              href="/nutricionista/ingredientes/novo"
+              class="relative group text-lg text-black font-medium py-2"
+            >
+              Criar Ingrediente
+              <span
+                class="absolute left-1/2 -translate-x-1/2 -bottom-1 h-0.5 w-0 bg-green-500 transition-all duration-300 group-hover:w-[80%] group-[.active]:w-[80%]"
+              ></span>
+            </a>
+            <a
+              href="/nutricionista/ingredientes"
+              class="relative group text-lg text-black font-medium py-2"
+            >
+              Seus Ingredientes
+              <span
+                class="absolute left-1/2 -translate-x-1/2 -bottom-1 h-0.5 w-0 bg-green-500 transition-all duration-300 group-hover:w-[80%] group-[.active]:w-[80%]"
+              ></span>
+            </a>
+            <a
+              href="/nutricionista/refeicoes/novo"
+              class="relative group text-lg text-black font-medium py-2"
+            >
+              Criar Refeição
+              <span
+                class="absolute left-1/2 -translate-x-1/2 -bottom-1 h-0.5 w-0 bg-green-500 transition-all duration-300 group-hover:w-[80%] group-[.active]:w-[80%]"
+              ></span>
+            </a>
+            <a
+              href="/nutricionista/refeicoes"
+              class="relative group text-lg text-black font-medium py-2"
+            >
+              Suas Refeições
+              <span
+                class="absolute left-1/2 -translate-x-1/2 -bottom-1 h-0.5 w-0 bg-green-500 transition-all duration-300 group-hover:w-[80%] group-[.active]:w-[80%]"
+              ></span>
+            </a>
+          </div>
+        </nav>
+
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <button
+              id="userBtn"
+              class="text-white focus:outline-none hidden lg:block"
+            >
+              <img
+                th:src="${usuarioLogado != null && usuarioLogado.caminhoImagem != null} ? @{/} + ${usuarioLogado.id} + '/imagem' : @{/imagens/UserIcon.png}"
+                alt="Usuário"
+                class="w-20 h-20 rounded-full object-cover border-4 border-[#297e1d] shadow-lg"
+              />
+            </button>
+
+            <div
+              id="userDropdown"
+              class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl z-50 border border-gray-200 overflow-hidden transition-all duration-300 ease-in-out transform origin-top-right"
+            >
+              <div
+                class="px-4 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200"
+              >
+                <div class="text-center">
+                  <strong
+                    class="text-lg font-semibold text-gray-800"
+                    th:text="${usuarioLogado.username}"
+                    >Usuário</strong
+                  >
+                </div>
+              </div>
+
+              <a
+                th:href="@{/perfil}"
+                class="w-full text-left px-4 py-3 flex items-center hover:bg-gray-50 text-gray-700 transition-colors duration-200 group border-b border-gray-100"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-3 text-gray-400 group-hover:text-green-500 transition-colors"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+                <span class="group-hover:text-green-600 transition-colors"
+                  >Editar Perfil</span
+                >
+              </a>
+
+              <button
+                onclick="fazerLogout()"
+                class="w-full text-left px-4 py-3 flex items-center hover:bg-gray-50 text-gray-700 transition-colors duration-200 group"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-3 text-gray-400 group-hover:text-red-500 transition-colors"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                <span class="group-hover:text-red-600 transition-colors"
+                  >Sair</span
+                >
+              </button>
+
+              <div
+                class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Botão Hamburger - visível apenas em mobile -->
+          <button
+            id="hamburger-button"
+            class="lg:hidden flex-shrink-0 focus:outline-none z-50 relative w-10 h-10"
+            aria-label="Menu"
+          >
+            <span
+              class="block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 transition-all duration-300"
+            >
+              <span
+                class="block absolute h-0.5 w-6 bg-black transform transition duration-300 ease-in-out"
+                id="hamburger-top"
+              ></span>
+              <span
+                class="block absolute h-0.5 w-6 bg-black transform transition duration-300 ease-in-out mt-2"
+                id="hamburger-middle"
+              ></span>
+              <span
+                class="block absolute h-0.5 w-6 bg-black transform transition duration-300 ease-in-out mt-4"
+                id="hamburger-bottom"
+              ></span>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu Mobile -->
+      <nav
+        id="mobile-menu"
+        class="w-full hidden lg:hidden transition-all duration-300 z-20"
+      >
+        <ul class="space-y-6 text-center w-full max-w-xs mx-auto py-6">
+          <li
+            class="opacity-0 transform -translate-y-4 transition-all duration-300"
+          >
+            <a
+              href="/nutricionista/fichas/nova"
+              class="block text-xl text-black font-medium py-2 hover:text-green-500 transition-colors"
+              onclick="closeMobileMenu()"
+              >Criar Ficha</a
+            >
+          </li>
+          <li
+            class="opacity-0 transform -translate-y-4 transition-all duration-300"
+          >
+            <a
+              href="/nutricionista/fichas"
+              class="block text-xl text-black font-medium py-2 hover:text-green-500 transition-colors"
+              onclick="closeMobileMenu()"
+              >Suas Fichas</a
+            >
+          </li>
+          <li
+            class="opacity-0 transform -translate-y-4 transition-all duration-300"
+          >
+            <a
+              href="/nutricionista/ingredientes/novo"
+              class="block text-xl text-black font-medium py-2 hover:text-green-500 transition-colors"
+              onclick="closeMobileMenu()"
+              >Criar Ingrediente</a
+            >
+          </li>
+          <li
+            class="opacity-0 transform -translate-y-4 transition-all duration-300"
+          >
+            <a
+              href="/nutricionista/ingredientes"
+              class="block text-xl text-black font-medium py-2 hover:text-green-500 transition-colors"
+              onclick="closeMobileMenu()"
+              >Seus Ingredientes</a
+            >
+          </li>
+          <li
+            class="opacity-0 transform -translate-y-4 transition-all duration-300"
+          >
+            <a
+              href="/nutricionista/refeicoes/novo"
+              class="block text-xl text-black font-medium py-2 hover:text-green-500 transition-colors"
+              onclick="closeMobileMenu()"
+              >Criar Refeição</a
+            >
+          </li>
+          <li
+            class="opacity-0 transform -translate-y-4 transition-all duration-300"
+          >
+            <a
+              href="/nutricionista/refeicoes"
+              class="block text-xl text-black font-medium py-2 hover:text-green-500 transition-colors"
+              onclick="closeMobileMenu()"
+              >Suas Refeições</a
+            >
+          </li>
+          <li
+            class="opacity-0 transform -translate-y-4 transition-all duration-300 pt-8"
+          >
+            <a
+              th:href="@{/perfil}"
+              class="block text-xl text-black font-medium py-2 hover:text-green-500 transition-colors"
+              onclick="closeMobileMenu()"
+              >Perfil</a
+            >
+          </li>
+          <li
+            class="opacity-0 transform -translate-y-4 transition-all duration-300"
+          >
+            <button
+              onclick="fazerLogout()"
+              class="block text-xl text-black font-medium py-2 hover:text-red-500 transition-colors w-full"
+            >
+              Sair
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const currentPath = window.location.pathname;
+          const navLinks = document.querySelectorAll("nav a");
+
+          navLinks.forEach((link) => {
+            if (link.getAttribute("href") === currentPath) {
+              link.classList.add("active");
+            }
+          });
+
+          // User dropdown
+          const userBtn = document.getElementById("userBtn");
+          const userDropdown = document.getElementById("userDropdown");
+          if (userBtn) {
+            userBtn.addEventListener("click", function (event) {
+              event.stopPropagation();
+              if (userDropdown) {
+                userDropdown.classList.toggle("hidden");
+              }
+            });
+          }
+          document.addEventListener("click", function (event) {
+            if (
+              userDropdown &&
+              !userDropdown.contains(event.target) &&
+              !userBtn.contains(event.target)
+            ) {
+              userDropdown.classList.add("hidden");
+            }
+          });
+
+          // Hamburger menu
+          const hamburgerButton = document.getElementById("hamburger-button");
+          const mobileMenu = document.getElementById("mobile-menu");
+          const menuItems = mobileMenu.querySelectorAll("li");
+          const hamburgerTop = document.getElementById("hamburger-top");
+          const hamburgerMiddle = document.getElementById("hamburger-middle");
+          const hamburgerBottom = document.getElementById("hamburger-bottom");
+
+          function toggleMobileMenu() {
+            const isOpen = !mobileMenu.classList.contains("hidden");
+
+            if (isOpen) {
+              // Fechar menu
+              mobileMenu.classList.add("hidden");
+              hamburgerTop.classList.remove("rotate-45", "translate-y-1.5");
+              hamburgerMiddle.classList.remove("opacity-0");
+              hamburgerBottom.classList.remove(
+                "-rotate-45",
+                "-translate-y-1.5"
+              );
+
+              // Resetar animação dos itens
+              menuItems.forEach((item) => {
+                item.classList.add("opacity-0", "-translate-y-4");
+              });
+
+              // Remover classe do body para restaurar scroll
+              document.body.classList.remove("menu-open");
+            } else {
+              // Abrir menu
+              mobileMenu.classList.remove("hidden");
+              hamburgerTop.classList.add("rotate-45", "translate-y-1.5");
+              hamburgerMiddle.classList.add("opacity-0");
+              hamburgerBottom.classList.add("-rotate-45", "-translate-y-1.5");
+
+              // Adicionar classe ao body para indicar que o menu está aberto
+              document.body.classList.add("menu-open");
+
+              // Animar itens do menu
+              setTimeout(() => {
+                menuItems.forEach((item, index) => {
+                  setTimeout(() => {
+                    item.classList.remove("opacity-0", "-translate-y-4");
+                  }, index * 100);
+                });
+              }, 10);
+            }
+          }
+
+          function closeMobileMenu() {
+            mobileMenu.classList.add("hidden");
+            hamburgerTop.classList.remove("rotate-45", "translate-y-1.5");
+            hamburgerMiddle.classList.remove("opacity-0");
+            hamburgerBottom.classList.remove("-rotate-45", "-translate-y-1.5");
+
+            menuItems.forEach((item) => {
+              item.classList.add("opacity-0", "-translate-y-4");
+            });
+
+            // Remover classe do body para restaurar scroll
+            document.body.classList.remove("menu-open");
+          }
+
+          hamburgerButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+            toggleMobileMenu();
+          });
+
+          // Fechar menu ao clicar fora
+          document.addEventListener("click", function (event) {
+            if (
+              !mobileMenu.contains(event.target) &&
+              !hamburgerButton.contains(event.target) &&
+              !mobileMenu.classList.contains("hidden")
+            ) {
+              closeMobileMenu();
+            }
+          });
+        });
+
+        function fazerLogout() {
+          // Limpar localStorage
+          localStorage.removeItem("rememberMe");
+
+          // Fazer logout via Spring Security
+          window.location.href = "/logout";
+        }
+      </script>
+    </header>
+  </body>
+</html>

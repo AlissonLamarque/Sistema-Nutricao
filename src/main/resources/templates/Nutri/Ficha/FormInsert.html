@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nova Ficha Técnica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col px-4 sm:px-0"
+  >
+    <div th:replace="~{Nutri/Header :: main-header}"></div>
+    <div
+      class="flex-1 sm:px-4 sm:w-full sm:flex sm:items-center sm:justify-center mx-4 sm:mx-0"
+    >
+      <main
+        class="bg-[#599e4a] rounded-3xl p-4 sm:p-6 md:p-10 max-w-full lg:max-w-4xl xl:max-w-6xl shadow-xl shadow-green-950/50 flex justify-around flex-wrap gap-8 min-h-[700px] mb-8"
+      >
+        <h1
+          class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-center w-full"
+        >
+          Cadastro de Ficha
+        </h1>
+        <form
+          th:action="@{/nutricionista/fichas}"
+          th:object="${ficha}"
+          method="post"
+          class="p-0.5 rounded-lg relative w-full max-w-full"
+          id="form-ficha"
+        >
+          <input type="hidden" th:field="*{id}" />
+          <input type="hidden" th:field="*{preparacao.id}" />
+
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 border-b pb-7 w-full"
+          >
+            <div class="w-full">
+              <input
+                type="text"
+                placeholder="Nome da preparação"
+                class="mt-1 w-full border border-black rounded-md p-2"
+                th:field="*{preparacao.nome}"
+                required
+              />
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-end gap-4 w-full">
+              <div class="w-full sm:w-52">
+                <select
+                  class="mt-1 w-full border border-black rounded-md p-2"
+                  th:field="*{preparacao.categoria}"
+                  required
+                >
+                  <option value="" disabled selected>Categoria</option>
+                  <option
+                    th:each="cat : ${T(com.example.sistemanutricao.model.Categoria).values()}"
+                    th:value="${cat}"
+                    th:text="${cat.nome}"
+                  ></option>
+                </select>
+              </div>
+
+              <div class="w-full sm:w-16">
+                <input
+                  type="number"
+                  placeholder="Nº"
+                  class="mt-1 w-full border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  onwheel="this.blur()"
+                  th:field="*{preparacao.numero}"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div class="mb-6 w-full">
+            <table class="min-w-full w-full">
+              <thead class="bg-gray-50 border border-black">
+                <tr>
+                  <th
+                    class="px-4 py-2 text-center text-xs border border-black font-medium text-black tracking-wider"
+                  >
+                    INGREDIENTES
+                  </th>
+                  <th
+                    class="px-4 py-2 text-center text-xs border border-black font-medium text-black tracking-wider"
+                  >
+                    MEDIDA CASEIRA
+                  </th>
+                  <th
+                    class="px-4 py-2 text-center text-xs border border-black font-medium text-black tracking-wider"
+                  >
+                    PB
+                  </th>
+                  <th
+                    class="px-4 py-2 text-center text-xs border border-black font-medium text-black tracking-wider"
+                  >
+                    PL
+                  </th>
+                  <th
+                    class="px-4 py-2 text-center text-xs border border-black font-medium text-black tracking-wider"
+                  >
+                    FC
+                  </th>
+                  <th
+                    class="px-4 py-2 text-center text-xs border border-black font-medium text-black tracking-wider"
+                  >
+                    CUSTO (COMPRADO)
+                  </th>
+                  <th
+                    class="px-4 py-2 text-center text-xs border border-black font-medium text-black tracking-wider"
+                  >
+                    CUSTO (USADO)
+                  </th>
+                  <th
+                    class="px-4 py-2 text-center text-xs border border-black font-medium text-black tracking-wider"
+                  >
+                    AÇÕES
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="ingredientesAdicionados"></tbody>
+              <tfoot>
+                <tr class="">
+                  <td class="px-2 py-2">
+                    <div class="relative w-full">
+                      <select id="ingredienteSelect" class="hidden">
+                        <option value="">Selecione...</option>
+                        <option
+                          th:each="ingrediente : ${ingredientesDisponiveis}"
+                          th:value="${ingrediente.id}"
+                          th:attr="data-ptn=${ingrediente.ptn}, data-cho=${ingrediente.cho}, data-lip=${ingrediente.lip}, data-sodio=${ingrediente.sodio}, data-saturada=${ingrediente.gorduraSaturada}"
+                          th:text="${ingrediente.nome}"
+                        ></option>
+                      </select>
+                      <input
+                        type="text"
+                        id="ingredienteSearch"
+                        placeholder="Nome"
+                        class="w-full border border-black rounded-md p-2 text-sm"
+                      />
+                      <div
+                        id="ingredienteSuggestions"
+                        class="absolute z-10 w-full top-full mb-1 bg-white rounded-md shadow-lg max-h-60 overflow-hidden border border-gray-300 hidden"
+                      ></div>
+                    </div>
+                  </td>
+                  <td class="px-2 py-2">
+                    <input
+                      type="text"
+                      id="medidaCaseira"
+                      class="w-full border border-black rounded-md p-2 text-sm"
+                      placeholder="Uma colher"
+                    />
+                  </td>
+                  <td class="px-2 py-2">
+                    <div class="flex items-center justify-center">
+                      <input
+                        type="number"
+                        step="0.01"
+                        id="pb"
+                        class="w-full border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        onwheel="this.blur()"
+                        placeholder="100"
+                      />
+                      <span class="ml-1 text-sm">g</span>
+                    </div>
+                  </td>
+                  <td class="px-2 py-2">
+                    <div class="flex items-center justify-center">
+                      <input
+                        type="number"
+                        step="0.01"
+                        id="pl"
+                        class="w-full border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        onwheel="this.blur()"
+                        placeholder="100"
+                      />
+                      <span class="ml-1 text-sm">g</span>
+                    </div>
+                  </td>
+                  <td class="px-2 py-2">
+                    <div
+                      class="w-full border border-black rounded-md p-2 text-sm bg-gray-100 text-center"
+                    >
+                      <span class="fc-display"></span>
+                    </div>
+                    <input type="hidden" class="fc-value" name="fc" value="" />
+                  </td>
+                  <td class="px-2 py-2">
+                    <div class="flex items-center justify-center gap-2">
+                      <span class="text-lg font-bold whitespace-nowrap"
+                        >R$</span
+                      >
+                      <input
+                        type="number"
+                        step="0.01"
+                        id="custoKg"
+                        class="w-full border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        onwheel="this.blur()"
+                        placeholder="4"
+                      />
+                    </div>
+                  </td>
+                  <td class="px-2 py-2">
+                    <div class="flex items-center justify-center gap-2">
+                      <span class="text-lg font-bold whitespace-nowrap"
+                        >R$</span
+                      >
+                      <input
+                        type="number"
+                        step="0.01"
+                        id="custoUsado"
+                        class="w-full border border-black rounded-md p-2 text-sm bg-gray-100 pointer-events-none"
+                        placeholder="2"
+                        readonly
+                        tabindex="-1"
+                      />
+                    </div>
+                  </td>
+                  <td class="px-2 py-2 text-center">
+                    <button
+                      type="button"
+                      onclick="adicionarIngrediente()"
+                      class="w-8 h-8 rounded-full border border-black bg-[#297e1d] hover:bg-green-900 text-white flex items-center justify-center mx-auto relative transform duration-200 hover:scale-105"
+                    >
+                      <i class="fa-solid fa-plus text-2xl"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-10 gap-4 mb-6 border-t">
+            <div class="md:col-span-7">
+              <textarea
+                placeholder="Equipamentos e utensílios utilizados"
+                class="mt-8 block w-full border border-black rounded-md p-2 resize-none overflow-hidden"
+                rows="1"
+                id="autoExpandTextarea"
+                th:field="*{preparacao.equipamentos}"
+              ></textarea>
+            </div>
+
+            <div class="md:col-span-3 flex flex-col items-end mt-8">
+              <div class="w-36 flex items-center gap-2">
+                <label class="text-lg font-bold whitespace-nowrap">R$</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  placeholder="Custo Total"
+                  class="block w-full border border-black rounded-md p-2 text-sm bg-gray-100 pointer-events-none"
+                  th:field="*{custoTotal}"
+                  readonly
+                  tabindex="-1"
+                  id="custoTotal"
+                />
+              </div>
+            </div>
+
+            <div class="md:col-span-7">
+              <textarea
+                placeholder="Modo de preparo"
+                class="mt-8 block w-full border border-black rounded-md p-2 resize-none overflow-hidden"
+                rows="1"
+                id="autoExpandTextarea2"
+                th:field="*{preparacao.modoPreparo}"
+              ></textarea>
+            </div>
+
+            <div class="md:col-span-3 flex flex-col items-end mt-8">
+              <div class="w-44 flex items-center gap-2">
+                <label class="text-lg font-bold whitespace-nowrap">R$</label>
+                <input
+                  id="custoPerCapita"
+                  type="number"
+                  step="0.01"
+                  placeholder="Custo per capita"
+                  class="block w-full border border-black rounded-md p-2 text-sm bg-gray-100 pointer-events-none"
+                  th:field="*{custoPerCapita}"
+                  readonly
+                  tabindex="-1"
+                />
+              </div>
+              <input
+                type="hidden"
+                th:field="*{status}"
+                th:value="${T(com.example.sistemanutricao.model.Status).ATIVA}"
+              />
+            </div>
+          </div>
+
+          <div class="mb-8 border-t pb-4">
+            <div class="flex flex-col items-center">
+              <h2 class="text-lg font-semibold mt-6">Foi utilizado água?</h2>
+              <div class="flex items-center justify-center mt-4">
+                <input
+                  type="checkbox"
+                  id="aguaCheckbox"
+                  class="h-4 w-4 rounded-full appearance-none border border-black checked:bg-green-900 focus:outline-none"
+                />
+                <label
+                  for="aguaCheckbox"
+                  class="ml-2 block text-sm font-medium text-black"
+                  >Sim</label
+                >
+              </div>
+              <div id="aguaInputs" class="hidden w-full max-w-md mt-4">
+                <div class="grid grid-cols-3 gap-4 items-end">
+                  <div class="flex flex-col">
+                    <div class="flex items-center gap-1">
+                      <input
+                        type="number"
+                        step="0.01"
+                        class="w-full border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        onwheel="this.blur()"
+                        placeholder="Quantidade"
+                        th:field="*{preparacao.qntdAgua}"
+                      />
+                      <span class="text-sm whitespace-nowrap">mL</span>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col">
+                    <div class="flex items-center gap-1">
+                      <input
+                        type="number"
+                        step="0.01"
+                        class="w-full border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        onwheel="this.blur()"
+                        placeholder="Sobrou?"
+                        th:field="*{preparacao.porcentAgua}"
+                      />
+                      <span class="text-sm whitespace-nowrap">%</span>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col">
+                    <input
+                      type="number"
+                      step="0.01"
+                      class="w-full border border-black rounded-md p-2 text-sm bg-gray-100 pointer-events-none"
+                      placeholder="fcc"
+                      th:value="${ficha.preparacao.fcc != null ? ficha.preparacao.fcc : ''}"
+                      name="preparacao.fcc"
+                      readonly
+                      tabindex="-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center mb-6 border-t pt-6">
+            <div class="flex justify-center gap-4 w-full max-w-md mb-4">
+              <div class="flex items-center gap-2">
+                <i class="fa-regular fa-clock text-2xl"></i>
+                <input
+                  type="text"
+                  class="w-48 border border-black rounded-md p-2"
+                  placeholder="1H15min"
+                  th:field="*{preparacao.tempoPreparo}"
+                />
+              </div>
+              <div class="flex items-center">
+                <input
+                  type="text"
+                  class="w-48 border border-black rounded-md p-2"
+                  placeholder="Medida caseira"
+                  th:field="*{medidaCaseira}"
+                />
+              </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4 w-full max-w-5xl">
+              <!-- Nº de porções -->
+              <div class="flex items-center">
+                <input
+                  id="numeroPorcoes"
+                  type="number"
+                  class="w-32 border border-black rounded-md p-2 text-sm bg-gray-100 pointer-events-none"
+                  placeholder="Nº de porções"
+                  th:field="*{numeroPorcoes}"
+                  min="1"
+                  readonly
+                  tabindex="-1"
+                />
+              </div>
+
+              <div class="flex items-center gap-2">
+                <input
+                  id="rendimento"
+                  type="number"
+                  step="0.01"
+                  class="w-28 border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  onwheel="this.blur()"
+                  placeholder="Rendimento"
+                  th:field="*{preparacao.rendimento}"
+                  min="0"
+                />
+                <label class="text-sm font-medium whitespace-nowrap">g</label>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <input
+                  id="pesoPorcao"
+                  type="number"
+                  step="0.01"
+                  class="w-28 border border-black rounded-md p-2 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  onwheel="this.blur()"
+                  placeholder="Peso da porção"
+                  th:field="*{pesoPorcao}"
+                  min="0"
+                />
+                <label class="text-sm font-medium whitespace-nowrap">g</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="perfilNutricional" class="p-4">
+            <div class="rounded-lg border border-black shadow-sm">
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr class="bg-gray-300">
+                    <th
+                      class="px-2 py-2 border border-black text-left rounded-tl-lg"
+                    >
+                      Ingredientes
+                    </th>
+                    <th class="px-2 py-2 border border-black text-left">
+                      Peso Liquido
+                    </th>
+                    <th class="px-2 py-2 border border-black text-left">
+                      PTN (g)
+                    </th>
+                    <th class="px-2 py-2 border border-black text-left">
+                      CHO (g)
+                    </th>
+                    <th class="px-2 py-2 border border-black text-left">
+                      LP (g)
+                    </th>
+                    <th class="px-2 py-2 border border-black text-left">
+                      Sódio (mg)
+                    </th>
+                    <th
+                      class="px-2 py-2 border border-black text-left rounded-tr-lg"
+                    >
+                      Gordura Saturada (g)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="nutricionalIngredientes" class="bg-white">
+                  <!-- Conteúdo nutricional será preenchido dinamicamente -->
+                </tbody>
+              </table>
+            </div>
+            <div class="mt-4 w-48 mx-auto">
+              <label
+                class="block text-center text-sm font-medium text-black mb-1"
+                >VTC (kcal)</label
+              >
+              <div class="border border-black rounded-md bg-white py-2 px-4">
+                <span
+                  id="vtc-display"
+                  class="text-lg font-semibold text-black block text-center"
+                ></span>
+              </div>
+              <div>
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.vtc}"
+                  id="vtc"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.kcalPtn}"
+                  id="kcalPtn"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.kcalCho}"
+                  id="kcalCho"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.kcalLip}"
+                  id="kcalLip"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.gramasPtn}"
+                  id="gramasPtn"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.gramasCho}"
+                  id="gramasCho"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.gramasLip}"
+                  id="gramasLip"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.gramasSodio}"
+                  id="gramasSodio"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.gramasSaturada}"
+                  id="gramasSaturada"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.porcentPtn}"
+                  id="porcentPtn"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.porcentCho}"
+                  id="porcentCho"
+                  required
+                />
+                <input
+                  type="hidden"
+                  th:field="*{perfilNutricional.porcentLip}"
+                  id="porcentLip"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-center gap-4 items-center">
+            <button
+              type="submit"
+              class="px-12 py-2 bg-[#297e1d] text-white rounded-md hover:bg-green-900 shadow-xl shadow-green-950/50"
+            >
+              Salvar
+            </button>
+            <label class="flex items-center gap-2">
+              <input type="checkbox" id="statusCheckbox" class="h-4 w-4" />
+              <span>Completa</span>
+            </label>
+
+            <input
+              type="hidden"
+              th:field="*{statusCriacao}"
+              id="statusCriacaoField"
+            />
+          </div>
+        </form>
+      </main>
+    </div>
+    <div th:replace="~{Footer :: main-footer}"></div>
+    <script th:src="@{/Scripts/Nutri/ScriptFormInsertFicha.js}"></script>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+  </body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ficha Técnica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css}"
+      integrity="sha512‑…(hash)…"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col"
+  >
+    <div th:replace="~{Nutri/Header :: main-header}"></div>
+
+    <div class="flex-1 flex items-center justify-center w-full">
+      <main
+        class="mt-16 bg-[#599e4a] rounded-3xl p-6 w-[95%] max-w-5xl mx-auto min-h-fit shadow-xl shadow-green-950/50 mb-8"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <a
+            th:href="@{/nutricionista/fichas}"
+            class="flex items-center p-2 rounded-full transition-colors duration-200"
+          >
+            <i class="fa-solid fa-arrow-left text-2xl"></i>
+          </a>
+          <h1 class="text-4xl font-bold text-black flex-grow text-center">
+            Ficha Técnica
+          </h1>
+          <a
+            th:href="@{/nutricionista/fichas/exportar-pdf/{id}(id=${ficha.id})}"
+            class="flex items-center p-2 text-black rounded-md transform duration-200 hover:scale-105"
+          >
+            <i class="fa-regular fa-circle-down text-3xl mr-2"></i>
+          </a>
+        </div>
+
+        <div
+          class="max-w-4xl mx-auto bg-white border border-black p-6 rounded-lg shadow-md"
+        >
+          <div class="mb-8">
+            <table class="w-full mb-6">
+              <tr>
+                <td class="font-semibold py-2">
+                  Nome da preparação:
+                  <span th:text="${ficha.preparacao().nome()}"
+                    >Vitamina de Banana com Aveia</span
+                  >
+                </td>
+                <td class="font-semibold py-2">
+                  Categoria:
+                  <span th:text="${ficha.preparacao().categoria()}"
+                    >Bebida</span
+                  >
+                </td>
+                <td class="font-semibold py-2">
+                  N°: <span th:text="${ficha.preparacao().numero()}">119</span>
+                </td>
+              </tr>
+            </table>
+            <table class="w-full border mb-6">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="border p-2 text-left">Ingredientes</th>
+                  <th class="border p-2 text-left">Medida Caseira</th>
+                  <th class="border p-2 text-left">PB</th>
+                  <th class="border p-2 text-left">PL</th>
+                  <th class="border p-2 text-left">FC</th>
+                  <th class="border p-2 text-left">Custo R$</th>
+                  <th class="border p-2 text-left">Custo Kg</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="ingrediente : ${ficha.ingredientes()}">
+                  <td
+                    class="border p-2"
+                    th:text="${ingrediente.ingrediente().nome()}"
+                  >
+                    Banana-prata madura
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ingrediente.medidaCaseira()}"
+                  >
+                    1 unidade média
+                  </td>
+                  <td class="border p-2" th:text="${ingrediente.pb()} + ' g'">
+                    150 g
+                  </td>
+                  <td class="border p-2" th:text="${ingrediente.pl()} + ' g'">
+                    115 g
+                  </td>
+                  <td class="border p-2" th:text="${ingrediente.fc()}">1</td>
+                  <td
+                    class="border p-2"
+                    th:text="'R$ ' + ${#numbers.formatDecimal(ingrediente.custoUsado(), 1, 2)}"
+                  >
+                    R$ 0,60
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="'R$ ' + ${#numbers.formatDecimal(ingrediente.custoKg(), 1, 2)}"
+                  >
+                    R$ 5,00
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="space-y-6 mb-6">
+              <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1">
+                  <h2 class="text-lg font-semibold mb-2">
+                    Equipamentos e utensílios utilizados:
+                  </h2>
+                  <div class="pl-4">
+                    <ol class="list-decimal">
+                      <li
+                        th:each="equipamento : ${#strings.arraySplit(ficha.preparacao().equipamentos(), ';')}"
+                        th:text="${equipamento}"
+                      >
+                        liquidificador
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+                <div class="md:w-48 flex-shrink-0">
+                  <p class="font-semibold">Custo total:</p>
+                  <p
+                    th:text="'R$ ' + ${#numbers.formatDecimal(ficha.custoTotal(), 1, 2)}"
+                  >
+                    R$ 1,80
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1">
+                  <h2 class="text-lg font-semibold mb-2">Modo de preparo:</h2>
+                  <div class="pl-4">
+                    <ol class="list-decimal">
+                      <li
+                        th:each="passo : ${#strings.arraySplit(ficha.preparacao().modoPreparo(), ';')}"
+                        th:text="${passo}"
+                      >
+                        Descasque e corte a banana-prata em rodelas.
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+                <div class="md:w-48 flex-shrink-0">
+                  <p class="font-semibold">Custo per capita:</p>
+                  <p
+                    th:text="'R$ ' + ${#numbers.formatDecimal(ficha.custoPerCapita(), 1, 2)}"
+                  >
+                    R$ 1,80
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-8">
+              <div class="grid grid-cols-2 gap-4 mb-4 border-b pb-4">
+                <!-- Linha 1 -->
+                <div>
+                  <p class="font-semibold">Tempo de preparo:</p>
+                  <p th:text="${ficha.preparacao().tempoPreparo()}">
+                    5 minutos
+                  </p>
+                </div>
+                <div>
+                  <p class="font-semibold">Peso da porção:</p>
+                  <p th:text="${ficha.pesoPorcao()} + ' g'">335 g</p>
+                </div>
+                <!-- Linha 2 -->
+                <div>
+                  <p class="font-semibold">Rendimento:</p>
+                  <p th:text="${ficha.preparacao().rendimento()} + ' g'">
+                    335 g
+                  </p>
+                </div>
+                <div>
+                  <p class="font-semibold">Medida caseira:</p>
+                  <p th:text="${ficha.medidaCaseira()}">1 copo</p>
+                </div>
+                <!-- Linha 3 -->
+                <div>
+                  <p class="font-semibold">Número de porções:</p>
+                  <p th:text="${ficha.numeroPorcoes()}">1</p>
+                </div>
+                <div
+                  th:unless="${ficha.preparacao().qntdAgua() != null and ficha.preparacao().qntdAgua() > 0}"
+                >
+                  <p class="font-semibold">Fcc:</p>
+                  <p th:text="${ficha.preparacao().fcc()}">0</p>
+                </div>
+                <!-- Linha 4: água -->
+                <div
+                  th:unless="${ficha.preparacao().qntdAgua() != null and ficha.preparacao().qntdAgua() > 0}"
+                  class="col-span-2"
+                >
+                  <p class="font-semibold">Água:</p>
+                  <p>Não</p>
+                </div>
+                <div
+                  th:if="${ficha.preparacao().qntdAgua() != null and ficha.preparacao().qntdAgua() > 0}"
+                >
+                  <p class="font-semibold">Quantidade de água:</p>
+                  <p th:text="${ficha.preparacao().qntdAgua()} + ' ml'">
+                    200 ml
+                  </p>
+                </div>
+                <div
+                  th:if="${ficha.preparacao().qntdAgua() != null and ficha.preparacao().qntdAgua() > 0}"
+                >
+                  <p class="font-semibold">Água que sobrou:</p>
+                  <p th:text="${ficha.preparacao().porcentAgua()} + ' %'">
+                    40 %
+                  </p>
+                </div>
+                <!-- Linha 5: fcc quando há água -->
+                <div
+                  th:if="${ficha.preparacao().qntdAgua() != null and ficha.preparacao().qntdAgua() > 0}"
+                >
+                  <p class="font-semibold">Fcc:</p>
+                  <p th:text="${ficha.preparacao().fcc()}">0</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t pt-4">
+              <h2 class="text-xl text-center font-bold mb-4">
+                Perfil Nutricional
+              </h2>
+
+              <table class="w-full border mb-6">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="border p-2 text-left">Ingredientes</th>
+                    <th class="border p-2 text-left">Per Capita(PL)</th>
+                    <th class="border p-2 text-left">PTN</th>
+                    <th class="border p-2 text-left">CHO</th>
+                    <th class="border p-2 text-left">LIP</th>
+                    <th class="border p-2 text-left">Sódio</th>
+                    <th class="border p-2 text-left">Gordura Saturada</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="ingrediente : ${ficha.ingredientes()}">
+                    <td
+                      class="border p-2"
+                      th:text="${ingrediente.ingrediente().nome()}"
+                    >
+                      Banana-prata madura
+                    </td>
+                    <td class="border p-2" th:text="${ingrediente.pl()} + ' g'">
+                      115 g
+                    </td>
+                    <td
+                      class="border p-2"
+                      th:text="${ingrediente.ingrediente().ptn()} + ' g'"
+                    >
+                      1,3 g
+                    </td>
+                    <td
+                      class="border p-2"
+                      th:text="${ingrediente.ingrediente().cho()} + ' g'"
+                    >
+                      29,8 g
+                    </td>
+                    <td
+                      class="border p-2"
+                      th:text="${ingrediente.ingrediente().lip()} + ' g'"
+                    >
+                      0,3 g
+                    </td>
+                    <td
+                      class="border p-2"
+                      th:text="${ingrediente.ingrediente().sodio()} + ' mg'"
+                    >
+                      0 mg
+                    </td>
+                    <td
+                      class="border p-2"
+                      th:text="${ingrediente.ingrediente().gorduraSaturada()} + ' g'"
+                    >
+                      0,1 g
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h3 class="text-lg font-semibold mb-2">Total</h3>
+              <table class="w-full border mb-4">
+                <tr>
+                  <td class="border p-2 font-semibold">Gramas</td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().gramasPtn()} + ' g'"
+                  >
+                    10,3 g
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().gramasCho()} + ' g'"
+                  >
+                    51,1 g
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().gramasLip()} + ' g'"
+                  >
+                    9,0 g
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().gramasSodio()} + ' mg'"
+                  >
+                    82 mg
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().gramasSaturada()} + ' g'"
+                  >
+                    3,9 g
+                  </td>
+                </tr>
+                <tr>
+                  <td class="border p-2 font-semibold">Kcal</td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().kcalPtn()}"
+                  >
+                    41,2
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().kcalCho()}"
+                  >
+                    204,4
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().kcalLip()}"
+                  >
+                    81,0
+                  </td>
+                  <td class="border p-2"></td>
+                  <td class="border p-2"></td>
+                </tr>
+                <tr>
+                  <td class="border p-2 font-semibold">%</td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().porcentPtn()} + '%'"
+                  >
+                    12,6%
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().porcentCho()} + '%'"
+                  >
+                    62,6%
+                  </td>
+                  <td
+                    class="border p-2"
+                    th:text="${ficha.perfilNutricional().porcentLip()} + '%'"
+                  >
+                    24,8%
+                  </td>
+                  <td class="border p-2"></td>
+                  <td class="border p-2"></td>
+                </tr>
+              </table>
+
+              <p class="font-semibold">
+                VCT:
+                <span th:text="${ficha.perfilNutricional().vtc()} + ' kcal'"
+                  >326,6 kcal</span
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-center gap-4 mt-4">
+          <a
+            th:href="@{/nutricionista/fichas/editar/{id}(id=${ficha.id})}"
+            class="px-4 py-2 bg-[#297e1d] text-white rounded-md shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+          >
+            Editar
+          </a>
+
+          <form
+            th:action="@{/nutricionista/fichas/toggle-status/{id}(id=${ficha.id})}"
+            method="post"
+            class="inline"
+          >
+            <button
+              type="submit"
+              th:class="${ficha.status().name() == 'ATIVA'} ?
+                            'px-4 py-2 bg-[#297e1d] text-white rounded-md shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105' :
+                            'px-4 py-2 bg-[#297e1d] text-white rounded-md shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105'"
+              th:text="${ficha.status().name() == 'ATIVA'} ? 'Arquivar' : 'Desarquivar'"
+            ></button>
+          </form>
+        </div>
+        <script th:src="@{/Scripts/Nutri/ScriptDetail.js}"></script>
+      </main>
+    </div>
+    <div th:replace="~{Footer :: main-footer}"></div>
+  </body>
+</html>

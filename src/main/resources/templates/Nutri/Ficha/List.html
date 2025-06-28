@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suas Fichas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      @media (min-width: 810px) {
+        .cabecalho-fichas {
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: flex-start !important;
+          position: relative;
+        }
+        .cabecalho-fichas-titulo {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-bottom: 0 !important;
+          width: max-content;
+        }
+        .cabecalho-fichas-botoes {
+          margin-top: 0 !important;
+          margin-left: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col"
+  >
+    <div th:replace="~{Nutri/Header :: main-header}"></div>
+    <div class="flex-1 flex items-center justify-center w-full">
+      <main
+        class="bg-[#599e4a] rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 w-[95%] max-w-6xl shadow-xl shadow-green-950/50 min-h-[500px] flex flex-col items-center mb-8"
+      >
+        <div class="max-w-5xl w-full">
+          <!-- Cabeçalho com título e botões -->
+          <div class="flex flex-col items-center mb-6 cabecalho-fichas">
+            <h1
+              id="tituloPagina"
+              class="text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center mb-4 cabecalho-fichas-titulo"
+            >
+              Suas Fichas
+            </h1>
+            <div class="flex gap-2 mt-2 sm:mt-0 cabecalho-fichas-botoes">
+              <button
+                type="button"
+                id="toggleStatusBtn"
+                th:data-current-status="${statusAtual != null ? statusAtual : 'ATIVA'}"
+                class="px-3 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-base sm:text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+              >
+                <span
+                  th:text="${statusAtual != null && statusAtual.name() == 'INATIVA'} ? 'Desarquivadas' : 'Arquivadas'"
+                ></span>
+              </button>
+              <button
+                type="button"
+                id="toggleStatusCriacaoBtn"
+                th:data-current-status-criacao="${statusCriacaoAtual != null ? statusCriacaoAtual : 'COMPLETA'}"
+                class="px-3 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-base sm:text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+              >
+                <span
+                  th:text="${statusCriacaoAtual != null && statusCriacaoAtual.name() == 'INCOMPLETA'} ? 'Completas' : 'Incompletas'"
+                ></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Formulário de pesquisa -->
+          <form
+            id="pesquisaForm"
+            method="get"
+            class="p-4 sm:p-6 rounded-lg mb-6 sm:mb-8 mx-auto max-w-4xl"
+            th:unless="${statusAtual?.name() == 'INATIVA' || statusCriacaoAtual?.name() == 'INCOMPLETA'}"
+          >
+            <div
+              class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 md:justify-center"
+            >
+              <div class="w-full sm:w-auto order-1 sm:order-none">
+                <select
+                  id="campoPesquisa"
+                  class="w-full sm:w-72 p-2 sm:p-3 border border-black rounded-lg text-base sm:text-lg text-black shadow-xl shadow-green-950/50 focus:outline-none focus:ring-2 focus:ring-[#297e1d] focus:border-[#297e1d]"
+                >
+                  <option value="" disabled selected>Selecionar campo</option>
+                  <option value="custoPerCapita">Custo per capita</option>
+                  <option value="custoTotal">Custo total</option>
+                  <option value="por-nome">Nome</option>
+                  <option value="por-categoria">Categoria</option>
+                  <option value="por-rendimento">Rendimento</option>
+                  <option value="por-numero">Número</option>
+                  <option value="vtc">VTC</option>
+                  <option value="gramasPTN">Gramas de PTN</option>
+                  <option value="gramasCHO">Gramas de CHO</option>
+                  <option value="gramasLIP">Gramas de LIP</option>
+                  <option value="gramasSodio">Gramas de Sódio</option>
+                  <option value="gramasSaturada">
+                    Gramas de Gordura Saturada
+                  </option>
+                </select>
+              </div>
+
+              <div class="w-full sm:w-auto flex gap-2 order-3 sm:order-none">
+                <input
+                  type="text"
+                  id="valorPesquisa"
+                  placeholder="Valor do campo"
+                  class="w-full sm:w-72 p-2 sm:p-3 border border-black rounded-lg text-base sm:text-lg placeholder-black shadow-xl shadow-green-950/50 focus:outline-none focus:ring-2 focus:ring-[#297e1d] focus:border-[#297e1d]"
+                />
+                <button
+                  type="button"
+                  id="btnPesquisar"
+                  class="px-3 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-base sm:text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105 sm:ml-2"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Lista de fichas -->
+          <div class="space-y-4 sm:space-y-6">
+            <div
+              th:if="${not fichas.empty}"
+              th:each="ficha : ${fichas}"
+              class="bg-[#89be77] p-4 sm:p-6 rounded-lg sm:rounded-full shadow-xl shadow-green-950/50 border border-black"
+            >
+              <div
+                class="flex flex-col items-center sm:flex-row sm:items-center sm:justify-between relative gap-3 sm:gap-0"
+              >
+                <div class="flex-1 text-center sm:text-left">
+                  <span
+                    class="text-lg sm:text-xl md:text-2xl font-semibold text-black"
+                    th:text="${ficha.preparacao.nome}"
+                  />
+                </div>
+
+                <div
+                  class="text-center sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2"
+                >
+                  <span
+                    class="text-base sm:text-lg font-semibold text-black"
+                    th:text="${ficha.preparacao.categoria.nome}"
+                  />
+                </div>
+
+                <div class="text-center sm:absolute sm:left-2/3 sm:ml-16">
+                  <span class="text-base sm:text-lg font-semibold text-black"
+                    >Nº: <span th:text="${ficha.preparacao.numero}"></span
+                  ></span>
+                </div>
+
+                <div class="flex-shrink-0 text-center mt-3 sm:mt-0">
+                  <a
+                    th:href="@{/nutricionista/fichas/{id}(id=${ficha.id})}"
+                    class="inline-block px-3 sm:px-4 py-1 sm:py-1.5 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50 text-black font-medium text-base sm:text-lg transform transition-all duration-200 hover:bg-[#b9dfa3] hover:scale-105"
+                  >
+                    Ver Ficha
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              th:if="${fichas != null and fichas.empty}"
+              class="text-black text-lg sm:text-xl text-center py-8 sm:py-10"
+            >
+              Nenhum resultado encontrado para a pesquisa.
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <div th:replace="~{Footer :: main-footer}"></div>
+    <script th:src="@{/Scripts/ScriptGeral.js}"></script>
+    <script th:src="@{/Scripts/Nutri/ScriptListFicha.js}"></script>
+  </body>
+</html>

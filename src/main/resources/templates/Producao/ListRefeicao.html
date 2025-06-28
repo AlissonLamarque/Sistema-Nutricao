@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Refeições</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-gradient-to-b from-[#89be77] from-0 via-[#b9dfa3] via-[9rem] via-[#e9ffd0] via-[11rem] to-white to-[15rem] min-h-screen flex flex-col"
+  >
+    <div th:replace="~{Producao/Header :: main-header}"></div>
+
+    <main
+      class="flex-1 flex items-start justify-center w-full px-4 pt-8 md:pt-16"
+    >
+      <div class="w-full max-w-6xl p-4 sm:p-6 md:p-8 lg:p-10">
+        <div class="relative mb-4 sm:mb-6">
+          <h1
+            class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-black"
+          >
+            Suas Refeições
+          </h1>
+        </div>
+
+        <form
+          th:action="@{/producao/refeicoes/pesquisar}"
+          method="get"
+          class="p-4 sm:p-6 rounded-lg mb-6 sm:mb-8 mx-auto max-w-4xl"
+        >
+          <div class="flex items-center justify-center gap-2 w-full">
+            <input
+              type="text"
+              name="nome"
+              th:value="${termoBusca}"
+              placeholder="Pesquisar por nome"
+              class="w-full md:w-72 p-2 sm:p-3 border border-black rounded-lg text-base sm:text-lg shadow-xl shadow-green-950/50 focus:outline-none focus:ring-2 focus:ring-[#297e1d] focus:border-[#297e1d]"
+              required
+            />
+            <button
+              type="submit"
+              class="px-3 sm:px-4 py-2 border border-black bg-[#297e1d] text-white rounded-lg text-base sm:text-lg font-medium shadow-xl shadow-green-950/50 transform duration-200 hover:bg-green-900 hover:scale-105"
+            >
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </form>
+
+        <div class="space-y-3 sm:space-y-4">
+          <div
+            th:each="refeicao : ${refeicoes}"
+            class="bg-[#89be77] p-4 sm:p-6 rounded-lg sm:rounded-full shadow border border-black"
+          >
+            <div
+              class="flex flex-col md:flex-row items-center justify-between gap-3"
+            >
+              <div
+                class="flex flex-col md:flex-row items-center gap-2 md:gap-4"
+              >
+                <h2
+                  class="text-lg sm:text-xl md:text-2xl font-semibold text-black truncate"
+                  th:text="${refeicao.nome}"
+                ></h2>
+                <div class="flex items-center text-black text-sm sm:text-base">
+                  <span class="h-full flex items-center"
+                    >Kcal: <span th:text="${refeicao.kcalTotal}"></span
+                  ></span>
+                </div>
+              </div>
+              <div class="flex flex-wrap justify-center md:justify-end gap-2">
+                <a
+                  th:each="ficha : ${refeicao.fichasTecnicas}"
+                  th:href="@{/producao/fichas/{id}(id=${ficha.id})}"
+                  class="bg-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium text-gray-800 hover:bg-gray-100 transition cursor-pointer"
+                  th:text="${ficha.nomePreparacao}"
+                >
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div th:replace="~{Footer :: main-footer}"></div>
+  </body>
+</html>

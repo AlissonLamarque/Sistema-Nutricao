@@ -44,10 +44,57 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        String nomeArquivo = imagemService.armazenarImagem(arquivoImagem);
-        usuario.setCaminhoImagem(nomeArquivo);
+        // Remover imagem anterior se existir
+        if (usuario.getCaminhoImagem() != null && !usuario.getCaminhoImagem().isEmpty()) {
+            imagemService.removerImagemPerfil(usuario.getCaminhoImagem());
+        }
+
+        // Armazenar nova imagem usando o nome do usuário
+        String caminhoImagem = imagemService.armazenarImagemPerfil(arquivoImagem, usuario.getUsername());
+        usuario.setCaminhoImagem(caminhoImagem);
 
         usuarioRepository.save(usuario);
+    }
+
+    /**
+     * Atualiza o perfil do usuário incluindo imagem de perfil
+     */
+    @Transactional
+    public GetUsuarioDTO atualizarPerfilComImagem(Long id, UpdateUsuarioDTO dto, MultipartFile arquivoImagem) {
+        logger.info("Iniciando atualização de perfil com imagem para usuário ID: {}", id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        logger.info("Usuário encontrado: {}", usuario);
+
+        usuario.setUsername(dto.username());
+        usuario.setEmail(dto.email());
+
+        // Atualizar senha se fornecida
+        if (dto.novaSenha() != null && !dto.novaSenha().isEmpty()) {
+            logger.info("Atualizando senha para: {}", dto.novaSenha());
+            usuario.setSenha(passwordEncoder.encode(dto.novaSenha()));
+        }
+
+        // Processar nova imagem se fornecida
+        if (arquivoImagem != null && !arquivoImagem.isEmpty()) {
+            logger.info("Processando nova imagem de perfil");
+            
+            // Remover imagem anterior se existir
+            if (usuario.getCaminhoImagem() != null && !usuario.getCaminhoImagem().isEmpty()) {
+                imagemService.removerImagemPerfil(usuario.getCaminhoImagem());
+            }
+            
+            // Armazenar nova imagem usando o nome do usuário
+            String caminhoImagem = imagemService.armazenarImagemPerfil(arquivoImagem, usuario.getUsername());
+            usuario.setCaminhoImagem(caminhoImagem);
+            logger.info("Nova imagem salva em: {}", caminhoImagem);
+        }
+
+        logger.info("Usuário antes de salvar: {}", usuario);
+        Usuario updated = usuarioRepository.save(usuario);
+        logger.info("Usuário salvo com sucesso: {}", updated);
+        return toGetDTO(updated);
     }
 
     public Resource obterImagemPerfil(Long usuarioId) {
@@ -85,6 +132,7 @@ public class UsuarioService {
 
     public List<GetUsuarioDTO> listAll() {
         return usuarioRepository.findAll().stream()
+                .filter(usuario -> !usuario.getId().equals(4L)) // Excluir usuário com ID 4
                 .map(this::toGetDTO)
                 .collect(Collectors.toList());
     }

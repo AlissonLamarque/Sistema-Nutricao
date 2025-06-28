@@ -77,38 +77,30 @@ public class UsuarioController {
             return "Perfil";
         }
 
-        String caminhoImagem = null;
-        if (arquivoImagem != null && !arquivoImagem.isEmpty()) {
-            caminhoImagem = imagemService.armazenarImagem(arquivoImagem);
-        }
-        logger.info("Caminho da imagem gerado: {}", caminhoImagem);
-
-        UpdateUsuarioDTO dtoParaAtualizar = new UpdateUsuarioDTO(
-                usuarioDTO.username(),
-                usuarioDTO.email(),
-                usuarioDTO.novaSenha(),
-                usuarioDTO.confirmarNovaSenha(),
-                usuarioDTO.senhaAtual(),
-                caminhoImagem
-        );
-        logger.info("DTO para atualização: {}", dtoParaAtualizar);
-
         // Verificar se as novas senhas coincidem (se foram fornecidas)
-        if (dtoParaAtualizar.novaSenha() != null && !dtoParaAtualizar.novaSenha().isEmpty()) {
+        if (usuarioDTO.novaSenha() != null && !usuarioDTO.novaSenha().isEmpty()) {
             // Verificar se a senha atual está correta
-            if (dtoParaAtualizar.senhaAtual() == null || !passwordEncoder.matches(dtoParaAtualizar.senhaAtual(), usuarioPrincipal.getPassword())) {
+            if (usuarioDTO.senhaAtual() == null || !passwordEncoder.matches(usuarioDTO.senhaAtual(), usuarioPrincipal.getPassword())) {
                 result.rejectValue("senhaAtual", "error.usuario", "Senha atual incorreta");
                 return "Perfil";
             }
             
-            if (!dtoParaAtualizar.novaSenha().equals(dtoParaAtualizar.confirmarNovaSenha())) {
+            if (!usuarioDTO.novaSenha().equals(usuarioDTO.confirmarNovaSenha())) {
                 result.rejectValue("confirmarNovaSenha", "error.usuario", "As novas senhas não coincidem");
                 return "Perfil";
             }
         }
 
-        usuarioService.update(usuarioPrincipal.getId(), dtoParaAtualizar);
-        return "redirect:/perfil?success";
+        try {
+            // Usar o novo método que processa imagem e dados do perfil
+            usuarioService.atualizarPerfilComImagem(usuarioPrincipal.getId(), usuarioDTO, arquivoImagem);
+            redirectAttributes.addFlashAttribute("success", "Perfil atualizado com sucesso!");
+            return "redirect:/perfil";
+        } catch (Exception e) {
+            logger.error("Erro ao atualizar perfil: {}", e.getMessage());
+            result.rejectValue("", "error.usuario", "Erro ao atualizar perfil: " + e.getMessage());
+            return "Perfil";
+        }
     }
 
     @GetMapping
@@ -145,6 +137,18 @@ public class UsuarioController {
         } else {
             response.put("autenticado", false);
             return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping("/teste-imagem/{id}")
+    public ResponseEntity<String> testeImagem(@PathVariable Long id) {
+        try {
+            GetUsuarioDTO usuario = usuarioService.findById(id);
+            return ResponseEntity.ok("Usuário: " + usuario.username() + 
+                                   ", Caminho da imagem: " + usuario.caminhoImagem() +
+                                   ", URL completa: /" + usuario.caminhoImagem());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
         }
     }
 

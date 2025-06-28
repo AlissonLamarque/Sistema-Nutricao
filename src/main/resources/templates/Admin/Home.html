@@ -27,7 +27,14 @@
       <div class="relative">
         <button id="userBtn" class="text-white focus:outline-none">
           <img
-            th:src="${usuarioLogado != null && usuarioLogado.caminhoImagem != null} ? @{/} + ${usuarioLogado.id} + '/imagem' : @{/imagens/UserIcon.png}"
+            th:if="${usuarioLogado != null && usuarioLogado.caminhoImagem != null}"
+            th:src="@{'/' + ${usuarioLogado.caminhoImagem}}"
+            alt="Usuário"
+            class="w-20 h-20 rounded-full object-cover border-4 border-[#297e1d] shadow-lg"
+          />
+          <img
+            th:unless="${usuarioLogado != null && usuarioLogado.caminhoImagem != null}"
+            th:src="@{/imagens/UserIcon.png}"
             alt="Usuário"
             class="w-20 h-20 rounded-full object-cover border-4 border-[#297e1d] shadow-lg"
           />

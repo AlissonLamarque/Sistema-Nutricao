@@ -25,7 +25,9 @@ public class UsernameController {
     @ModelAttribute("usuarioLogado")
     public GetUsuarioDTO getUsuarioLogado(@AuthenticationPrincipal UsuarioSecurity usuarioPrincipal) {
         if (usuarioPrincipal != null) {
-            return usuarioService.findById(usuarioPrincipal.getId());
+            GetUsuarioDTO usuario = usuarioService.findById(usuarioPrincipal.getId());
+            System.out.println("DEBUG - UsuarioLogado: " + usuario.username() + ", CaminhoImagem: " + usuario.caminhoImagem());
+            return usuario;
         }
         return null;
     }

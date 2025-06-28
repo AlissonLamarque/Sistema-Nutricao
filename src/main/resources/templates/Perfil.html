@@ -28,8 +28,15 @@
       <div class="relative">
         <button id="userBtn" class="text-white focus:outline-none">
           <img
-            th:src="${usuarioLogado != null && usuarioLogado.caminhoImagem != null} ? @{/} + ${usuarioLogado.id} + '/imagem' : @{/imagens/UserIcon.png}"
+            th:if="${usuarioLogado != null && usuarioLogado.caminhoImagem != null}"
+            th:src="@{'/' + ${usuarioLogado.caminhoImagem}}"
             alt="Imagem de Perfil"
+            class="w-20 h-20 rounded-full object-cover border-4 border-[#297e1d] shadow-lg"
+          />
+          <img
+            th:unless="${usuarioLogado != null && usuarioLogado.caminhoImagem != null}"
+            th:src="@{/imagens/UserIcon.png}"
+            alt="Imagem de Perfil Padrão"
             class="w-20 h-20 rounded-full object-cover border-4 border-[#297e1d] shadow-lg"
           />
         </button>
@@ -132,10 +139,15 @@
               <!-- Exibe a imagem atual ou placeholder -->
               <div class="relative mb-4">
                 <img
-                  th:src="${usuario.caminhoImagem != null} ?
-                            @{${usuario.id} + '/imagem'} :
-                            @{/imagens/UserIcon.png}"
+                  th:if="${usuario.caminhoImagem != null}"
+                  th:src="'/' + ${usuario.caminhoImagem}"
                   alt="Imagem de perfil"
+                  class="w-32 h-32 rounded-full object-cover border-4 border-green-200"
+                />
+                <img
+                  th:unless="${usuario.caminhoImagem != null}"
+                  th:src="@{/imagens/UserIcon.png}"
+                  alt="Imagem de perfil padrão"
                   class="w-32 h-32 rounded-full object-cover border-4 border-green-200"
                 />
 

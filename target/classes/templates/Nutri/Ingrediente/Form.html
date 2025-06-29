@@ -43,7 +43,6 @@
 
           <div class="grid grid-cols-3 gap-3 md:gap-4 mb-4">
             <div>
-              <!-- Mobile -->
               <input
                 type="number"
                 step="0.01"
@@ -51,23 +50,11 @@
                 th:placeholder="'PTN(g)'"
                 name="ptn"
                 th:value="${ingrediente.ptn()}"
-                class="block sm:hidden shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                onwheel="this.blur()"
-              />
-              <!-- Desktop -->
-              <input
-                type="number"
-                step="0.01"
-                id="ptn"
-                th:placeholder="'Proteína(g)'"
-                name="ptn"
-                th:value="${ingrediente.ptn()}"
-                class="hidden sm:block shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                class="shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 onwheel="this.blur()"
               />
             </div>
             <div>
-              <!-- Mobile -->
               <input
                 type="number"
                 step="0.01"
@@ -75,23 +62,11 @@
                 th:placeholder="'CHO(g)'"
                 name="cho"
                 th:value="${ingrediente.cho()}"
-                class="block sm:hidden shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                onwheel="this.blur()"
-              />
-              <!-- Desktop -->
-              <input
-                type="number"
-                step="0.01"
-                id="cho"
-                th:placeholder="'Carboidrato(g)'"
-                name="cho"
-                th:value="${ingrediente.cho()}"
-                class="hidden sm:block shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                class="shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 onwheel="this.blur()"
               />
             </div>
             <div>
-              <!-- Mobile -->
               <input
                 type="number"
                 step="0.01"
@@ -99,18 +74,7 @@
                 th:placeholder="'LIP(g)'"
                 name="lip"
                 th:value="${ingrediente.lip()}"
-                class="block sm:hidden shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                onwheel="this.blur()"
-              />
-              <!-- Desktop -->
-              <input
-                type="number"
-                step="0.01"
-                id="lip"
-                th:placeholder="'Lipidios(g)'"
-                name="lip"
-                th:value="${ingrediente.lip()}"
-                class="hidden sm:block shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                class="shadow border border-black rounded w-full max-w-md mx-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm md:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 onwheel="this.blur()"
               />
             </div>

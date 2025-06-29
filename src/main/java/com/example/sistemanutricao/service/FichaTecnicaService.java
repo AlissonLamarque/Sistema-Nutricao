@@ -391,14 +391,12 @@ public class FichaTecnicaService {
     public List<FichaTecnicaComTagDTO> buscarPorTag(String campo, String tag, Long nutricionistaId) {
         try {
             if (campo == null || tag == null || nutricionistaId == null) {
-                System.err.println("Invalid parameters: campo=" + campo + ", tag=" + tag + ", nutricionistaId=" + nutricionistaId);
                 return new ArrayList<>();
             }
             
             List<FichaTecnica> fichas = fichaRepository.findByStatusAndNutricionista_IdAndStatusCriacao(Status.ATIVA, nutricionistaId, StatusCriacao.COMPLETA);
             
             if (fichas == null || fichas.isEmpty()) {
-                System.out.println("No fichas found for nutricionistaId: " + nutricionistaId);
                 return new ArrayList<>();
             }
             
@@ -433,7 +431,6 @@ public class FichaTecnicaService {
                     .filter(ficha -> ficha != null && ficha.tag().equalsIgnoreCase(tag))
                     .toList();
         } catch (Exception e) {
-            System.err.println("Error in buscarPorTag: " + e.getMessage());
             e.printStackTrace();
             return new ArrayList<>();
         }
@@ -442,14 +439,12 @@ public class FichaTecnicaService {
     public List<FichaTecnicaComTagDTO> buscarPorTagEstabelecimento(String campo, String tag, Long estabelecimentoId) {
         try {
             if (campo == null || tag == null || estabelecimentoId == null) {
-                System.err.println("Invalid parameters: campo=" + campo + ", tag=" + tag + ", estabelecimentoId=" + estabelecimentoId);
                 return new ArrayList<>();
             }
             
             List<FichaTecnica> fichas = fichaRepository.findByStatusAndNutricionistaEstabelecimentoIdAndStatusCriacao(Status.ATIVA, estabelecimentoId, StatusCriacao.COMPLETA);
             
             if (fichas == null || fichas.isEmpty()) {
-                System.out.println("No fichas found for estabelecimentoId: " + estabelecimentoId);
                 return new ArrayList<>();
             }
             
@@ -477,14 +472,12 @@ public class FichaTecnicaService {
                                     determinarTag(ficha, campo)
                             );
                         } catch (Exception e) {
-                            System.err.println("Error creating FichaTecnicaComTagDTO for ficha ID " + ficha.getId() + ": " + e.getMessage());
                             return null;
                         }
                     })
                     .filter(ficha -> ficha != null && ficha.tag().equalsIgnoreCase(tag))
                     .toList();
         } catch (Exception e) {
-            System.err.println("Error in buscarPorTagEstabelecimento: " + e.getMessage());
             e.printStackTrace();
             return new ArrayList<>();
         }
@@ -532,7 +525,6 @@ public class FichaTecnicaService {
                     return "Baixa";
             }
         } catch (Exception e) {
-            System.err.println("Error in determinarTag: " + e.getMessage());
             return "Baixa";
         }
     }

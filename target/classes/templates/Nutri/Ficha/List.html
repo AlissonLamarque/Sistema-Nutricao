@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Suas Fichas</title>
+    <link rel="icon" type="image/png" th:href="@{/imagens/Logo.png}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
@@ -192,18 +193,18 @@
                   ></span>
                 </div>
 
-                  <a
-                    th:href="@{/nutricionista/fichas/{id}(id=${ficha.id})}"
-                    class="inline-block px-3 sm:px-4 py-1 sm:py-1.5 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50 text-black font-medium text-base sm:text-lg transform transition-all duration-200 hover:bg-[#b9dfa3] hover:scale-105"
-                  >
-                    Ver Ficha
-                  </a>
-                  <a
-                          th:href="@{/nutricionista/fichas/exportar-pdf/{id}(id=${ficha.id})}"
-                          class="flex items-center p-2 text-[#e9ffd0] rounded-md transform transition-all duration-200 hover:text-[#b9dfa3] hover:scale-105"
-                  >
-                    <i class="fa-regular fa-circle-down text-3xl mr-2"></i>
-                  </a>
+                <a
+                  th:href="@{/nutricionista/fichas/{id}(id=${ficha.id})}"
+                  class="inline-block px-3 sm:px-4 py-1 sm:py-1.5 border border-black rounded-lg bg-[#e9ffd0] shadow-xl shadow-green-950/50 text-black font-medium text-base sm:text-lg transform transition-all duration-200 hover:bg-[#b9dfa3] hover:scale-105"
+                >
+                  Ver Ficha
+                </a>
+                <a
+                  th:href="@{/nutricionista/fichas/exportar-pdf/{id}(id=${ficha.id})}"
+                  class="flex items-center p-2 text-[#e9ffd0] rounded-md transform transition-all duration-200 hover:text-[#b9dfa3] hover:scale-105"
+                >
+                  <i class="fa-regular fa-circle-down text-3xl mr-2"></i>
+                </a>
               </div>
             </div>
 

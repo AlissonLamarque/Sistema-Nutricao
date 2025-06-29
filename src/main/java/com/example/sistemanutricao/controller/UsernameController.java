@@ -26,7 +26,6 @@ public class UsernameController {
     public GetUsuarioDTO getUsuarioLogado(@AuthenticationPrincipal UsuarioSecurity usuarioPrincipal) {
         if (usuarioPrincipal != null) {
             GetUsuarioDTO usuario = usuarioService.findById(usuarioPrincipal.getId());
-            System.out.println("DEBUG - UsuarioLogado: " + usuario.username() + ", CaminhoImagem: " + usuario.caminhoImagem());
             return usuario;
         }
         return null;

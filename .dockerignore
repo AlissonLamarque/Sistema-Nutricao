@@ -1,0 +1,35 @@
+# Arquivos do Maven
+target/
+!target/*.jar
+
+# Arquivos do Git
+.git/
+.gitignore
+
+# Arquivos do IDE
+.idea/
+*.iml
+
+# Arquivos do Node.js
+node_modules/
+package-lock.json
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Arquivos de upload (serão montados como volume)
+uploads/
+
+# Arquivos de configuração local
+application-local.properties
+
+# Arquivos de documentação
+README.md
+*.md
+
+# Arquivos de teste
+src/test/ 

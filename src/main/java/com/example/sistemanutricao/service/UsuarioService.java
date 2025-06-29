@@ -132,7 +132,7 @@ public class UsuarioService {
 
     public List<GetUsuarioDTO> listAll() {
         return usuarioRepository.findAll().stream()
-                .filter(usuario -> !usuario.getId().equals(4L)) // Excluir usuário com ID 4
+                .filter(usuario -> !usuario.getId().equals(1L) && !usuario.getId().equals(4L)) // Excluir usuários com ID 1 e 4
                 .map(this::toGetDTO)
                 .collect(Collectors.toList());
     }

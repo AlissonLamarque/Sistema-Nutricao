@@ -77,7 +77,7 @@ public class NutricionistaController {
 
     @GetMapping
     public String get() {
-        return "/Nutri/Home";
+        return "Nutri/Home";
     }
 
     @GetMapping("/fichas")

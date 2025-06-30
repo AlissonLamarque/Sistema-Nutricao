@@ -103,10 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("novaSenha").value = novaSenha;
     document.getElementById("confirmarNovaSenha").value = confirmarNovaSenha;
     document.getElementById("senhaAtual").value = senhaAtual;
-
-    alert(
-      'Senha alterada com sucesso! Clique em "Salvar Alterações" para confirmar.'
-    );
   }
 
   // Função para cancelar edição de senha

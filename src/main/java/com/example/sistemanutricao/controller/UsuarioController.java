@@ -140,6 +140,11 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/acesso-negado")
+    public String acessoNegado() {
+        return "acesso-negado";
+    }
+
     @GetMapping("/teste-imagem/{id}")
     public ResponseEntity<String> testeImagem(@PathVariable Long id) {
         try {

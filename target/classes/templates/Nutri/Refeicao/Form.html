@@ -71,7 +71,7 @@
                    data-vct=${ficha.vct}"
               >
                 <span
-                  th:text="${ficha.nomePreparacao} + ' (' + #numbers.formatDecimal(ficha.vct,2,'POINT') + ' kcal)'"
+                  th:text="|${ficha.nomePreparacao} (${ficha.vct} kcal)|"
                 ></span>
                 <button
                   type="button"
@@ -145,6 +145,19 @@
           });
         });
         updateKcalTotal();
+
+        // Adiciona event listeners aos botões de remoção existentes
+        document
+          .querySelectorAll('[data-action="remove"]')
+          .forEach((button) => {
+            button.addEventListener("click", (e) => {
+              const fichaDiv = e.target.closest("[data-id]");
+              if (fichaDiv) {
+                const id = parseInt(fichaDiv.getAttribute("data-id"));
+                removeFicha(id);
+              }
+            });
+          });
 
         function updateKcalTotal() {
           const total = selectedFichas.reduce(

@@ -192,11 +192,9 @@
             <h2>Equipamentos e utensílios utilizados:</h2>
             <ol>
               <li
-                th:each="equipamento : ${#strings.arraySplit(ficha.preparacao().equipamentos(), ';')}"
-                th:text="${equipamento}"
-              >
-                liquidificador
-              </li>
+                th:each="equipamento : ${#strings.arraySplit(ficha.preparacao().equipamentos(), '.')}"
+                th:text="${#strings.trim(equipamento)}"
+              ></li>
             </ol>
           </td>
           <td width="40%">
@@ -218,11 +216,9 @@
             <h2>Modo de preparo:</h2>
             <ol>
               <li
-                th:each="passo : ${#strings.arraySplit(ficha.preparacao().modoPreparo(), ';')}"
-                th:text="${passo}"
-              >
-                Descasque e corte a banana-prata em rodelas.
-              </li>
+                th:each="passo : ${#strings.arraySplit(ficha.preparacao().modoPreparo(), '.')}"
+                th:text="${#strings.trim(passo)}"
+              ></li>
             </ol>
           </td>
           <td width="40%">

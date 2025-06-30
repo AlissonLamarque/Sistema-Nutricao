@@ -23,13 +23,16 @@ public class SecurityConfig {
 
     private final AuthenticationSuccessHandler successHandler;
     private final UserDetailsService userDetailsService;
+    private final CustomAuthenticationFailureHandler failureHandler;
 
     public SecurityConfig(
             AuthenticationSuccessHandler successHandler,
-            UserDetailsService userDetailsService
+            UserDetailsService userDetailsService,
+            CustomAuthenticationFailureHandler failureHandler
     ) {
         this.successHandler = successHandler;
         this.userDetailsService = userDetailsService;
+        this.failureHandler = failureHandler;
     }
 
     @Bean
@@ -38,23 +41,32 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public CustomAuthenticationProvider customAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        return new CustomAuthenticationProvider(userDetailsService, passwordEncoder);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationProvider authenticationProvider) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .sessionManagement(m -> m.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+
+                .authenticationProvider(authenticationProvider)
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/nutricionista/**").hasAnyRole("NUTRICIONISTA")
                         .requestMatchers("/producao/**").hasAnyRole("PRODUCAO")
                         .requestMatchers("/perfil", "/editar").hasAnyRole("ADMIN", "NUTRICIONISTA", "PRODUCAO")
+                        .requestMatchers("/acesso-negado").permitAll()
                         .anyRequest().permitAll()
                 )
 
                 .formLogin(form -> form
                         .loginPage("/")
                         .successHandler(successHandler)
+                        .failureHandler(failureHandler)
                         .permitAll()
                 )
 

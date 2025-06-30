@@ -64,9 +64,8 @@
                         <div class="flex-1">
                             <h2 class="text-base sm:text-lg font-semibold mb-2">Equipamentos e utensílios utilizados:</h2>
                             <div class="pl-4">
-                                <ol class="list-decimal text-sm sm:text-base">
-                                    <li th:each="equipamento : ${#strings.arraySplit(ficha.preparacao().equipamentos(), ';')}"
-                                        th:text="${equipamento}">liquidificador</li>
+                                <ol class="list-decimal">
+                                    <li th:each="equipamento : ${#strings.arraySplit(ficha.preparacao().equipamentos(), '.')}" th:text="${#strings.trim(equipamento)}"></li>
                                 </ol>
                             </div>
                         </div>
@@ -79,9 +78,8 @@
                         <div class="flex-1">
                             <h2 class="text-base sm:text-lg font-semibold mb-2">Modo de preparo:</h2>
                             <div class="pl-4">
-                                <ol class="list-decimal text-sm sm:text-base">
-                                    <li th:each="passo : ${#strings.arraySplit(ficha.preparacao().modoPreparo(), ';')}"
-                                        th:text="${passo}">Descasque e corte a banana-prata em rodelas.</li>
+                                <ol class="list-decimal">
+                                    <li th:each="passo : ${#strings.arraySplit(ficha.preparacao().modoPreparo(), '.')}" th:text="${#strings.trim(passo)}"></li>
                                 </ol>
                             </div>
                         </div>

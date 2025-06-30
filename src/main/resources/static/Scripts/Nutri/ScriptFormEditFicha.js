@@ -395,7 +395,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const cols =
       sodio !== null
-        ? `<td>${sodio.toFixed(2)}</td><td>${saturada.toFixed(2)}</td>`
+        ? `<td class='border border-black'>${sodio.toFixed(
+            2
+          )}</td><td class='border border-black'>${saturada.toFixed(2)}</td>`
         : `<td colspan="2"></td>`;
 
     row.innerHTML = `

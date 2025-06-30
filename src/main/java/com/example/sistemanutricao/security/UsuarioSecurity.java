@@ -1,12 +1,13 @@
 package com.example.sistemanutricao.security;
-import com.example.sistemanutricao.model.Cargo;
-import com.example.sistemanutricao.model.Usuario;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import com.example.sistemanutricao.model.Cargo;
+import com.example.sistemanutricao.model.Usuario;
 
 public class UsuarioSecurity implements UserDetails {
 
@@ -59,7 +60,7 @@ public class UsuarioSecurity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return usuario.isAtivo();
     }
 
     public Long getId() {

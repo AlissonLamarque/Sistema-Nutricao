@@ -115,11 +115,9 @@
                   <div class="pl-4">
                     <ol class="list-decimal">
                       <li
-                        th:each="equipamento : ${#strings.arraySplit(ficha.preparacao().equipamentos(), ';')}"
-                        th:text="${equipamento}"
-                      >
-                        liquidificador
-                      </li>
+                        th:each="equipamento : ${#strings.arraySplit(ficha.preparacao().equipamentos(), '.')}"
+                        th:text="${#strings.trim(equipamento)}"
+                      ></li>
                     </ol>
                   </div>
                 </div>
@@ -138,11 +136,9 @@
                   <div class="pl-4">
                     <ol class="list-decimal">
                       <li
-                        th:each="passo : ${#strings.arraySplit(ficha.preparacao().modoPreparo(), ';')}"
-                        th:text="${passo}"
-                      >
-                        Descasque e corte a banana-prata em rodelas.
-                      </li>
+                        th:each="passo : ${#strings.arraySplit(ficha.preparacao().modoPreparo(), '.')}"
+                        th:text="${#strings.trim(passo)}"
+                      ></li>
                     </ol>
                   </div>
                 </div>

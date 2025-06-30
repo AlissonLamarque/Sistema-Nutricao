@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt_BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acesso Negado</title>
+    <link rel="icon" type="image/png" th:href="@{/imagens/Logo.png}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-[#e9ffd0] min-h-screen flex items-center justify-center p-4 lg:p-8"
+  >
+    <div class="w-full max-w-md mx-auto">
+      <div
+        class="bg-[#599e4a] rounded-2xl overflow-hidden transition-all duration-300 shadow-xl shadow-green-950/50 w-full"
+      >
+        <div class="p-6 md:p-8 lg:p-10">
+          <!-- Ícone de acesso negado -->
+          <div class="flex justify-center mb-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-16 w-16 text-red-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
+            </svg>
+          </div>
+
+          <h1
+            class="text-2xl md:text-3xl font-bold text-white text-center mb-4"
+          >
+            Acesso Negado
+          </h1>
+
+          <div class="text-white text-center mb-6">
+            <p class="text-lg mb-2">
+              Sua conta está inativa ou não possui as permissões necessárias.
+            </p>
+            <p class="text-sm opacity-90">
+              Entre em contato com o administrador do sistema para mais
+              informações.
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <a
+              href="/"
+              class="w-full text-sm md:text-base bg-[#297e1d] hover:bg-[#1f6b15] text-white font-bold py-2 md:py-3 px-4 rounded-lg transition duration-300 shadow-md hover:shadow-lg block text-center"
+            >
+              Voltar ao Login
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
